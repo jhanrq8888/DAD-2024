@@ -1,13 +1,8 @@
 spring:
   application:
-    name: ms-catálogo-service
+    name: ms-catalogo-service
   profiles:
     active: development
   config:
     import: optional:configserver:http://root:123456@localhost:7070
 
-  datasource:
-    driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ms_catalogo
-    username: root
-    password:
