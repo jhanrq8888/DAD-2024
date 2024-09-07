@@ -13,7 +13,7 @@ spring:
     show-sql: true
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://local host:3306/ms_pedido
+    url: jdbc:mysql://localhost:3306/ms_pedido
     username: root
     password:
 eureka:
