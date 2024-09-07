@@ -8,6 +8,9 @@ public interface PedidoService {
     public Pedido save(Pedido Pedido);
     public Pedido update(Pedido Pedido);
     public Optional<Pedido> findById(Integer id);
+
+    Optional<Pedido> listarPorId(Integer id);
+
     public void deleteById(Integer id);
 }
 
