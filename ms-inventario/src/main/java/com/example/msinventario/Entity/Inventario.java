@@ -5,16 +5,14 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.util.Date;
-import java.util.List;
 
+import java.util.List;
 
 @Entity
 @Data
-public class Almacen {
+public class Inventario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Integer id;
 
     private String nombre;
@@ -22,20 +20,22 @@ public class Almacen {
     private String descripcion;
 
     private Double stock;
-    
-    private String Talla;
+
+    private String modelo;
+
+    private Integer codigo;
 
     private Integer proveedorId;
 
-    public Almacen(){
+    public Inventario() {
         this.stock = (double) 0;
     }
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "almacen_id")
-    private List<AlmacenDetalle> almacenDetalle;
+    @JoinColumn(name = "inventario_id")
+    private List<InventarioDetalle> inventarioDetalle;
+
     @Transient
     private Proveedor proveedor;
-
 }

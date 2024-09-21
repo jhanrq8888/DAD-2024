@@ -1,59 +1,50 @@
 package com.example.msproveedor.Controller;
 
+
 import com.example.msproveedor.Entity.Proveedor;
 import com.example.msproveedor.Service.ProveedorService;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@RestController
+@RequestMapping("/proveedor")
 public class ProveedorController {
-
 
     @Autowired
     private ProveedorService proveedorService;
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<List<Proveedor>> list() {
-        return ResponseEntity.ok().body(proveedorService.listar());
+        List<Proveedor> proveedores = proveedorService.list();
+        return ResponseEntity.ok(proveedores);
     }
 
     @PostMapping
     public ResponseEntity<Proveedor> save(@RequestBody Proveedor proveedor) {
-        return ResponseEntity.ok(proveedorService.guardar(proveedor));
+        Proveedor savedProveedor = proveedorService.save(proveedor);
+        return ResponseEntity.ok(savedProveedor);
     }
 
-    @CircuitBreaker(name = "proveedorListarPorIdCB", fallbackMethod = "fallBackProveedorListarPorIdCB")
-    @PutMapping()
+    @PutMapping
     public ResponseEntity<Proveedor> update(@RequestBody Proveedor proveedor) {
-        return ResponseEntity.ok(proveedorService.actualizar(proveedor));
+        Proveedor updatedProveedor = proveedorService.update(proveedor);
+        return ResponseEntity.ok(updatedProveedor);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Proveedor> listById(@PathVariable(required = true) Integer id) {
-        Optional<Proveedor> proveedor = proveedorService.listarPorId(id);
-        if (proveedor.isPresent()) {
-            return ResponseEntity.ok(proveedor.get());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Proveedor> listById(@PathVariable Integer id) {
+        Optional<Proveedor> proveedor = proveedorService.findById(id);
+        return proveedor.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<List<Proveedor>> deleteById(@PathVariable(required = true) Integer id) {
-        proveedorService.eliminarPorId(id);
-        return ResponseEntity.ok(proveedorService.listar());
+    public ResponseEntity<String> deleteById(@PathVariable Integer id) {
+        proveedorService.deleteById(id);
+        return ResponseEntity.ok("Eliminación Correcta");
     }
-
-    private ResponseEntity<Proveedor> fallBackProveedorListarPorIdCB(@PathVariable(required = true) Integer id, RuntimeException e) {
-        Proveedor proveedor = new Proveedor();
-        proveedor.setId(90000);
-        return ResponseEntity.ok().body(proveedor);
-    }
-
 }

@@ -8,5 +8,9 @@ public class Producto {
 
     private String nombre;
 
+    private String modelo;
+
+    private Integer codigo;
+
     private Proveedor proveedor;
 }

@@ -1,6 +1,5 @@
 package com.example.msinventario.Entity;
 
-
 import com.example.msinventario.dto.Producto;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -9,10 +8,9 @@ import java.util.Date;
 
 @Entity
 @Data
-public class AlmacenDetalle {
+public class InventarioDetalle {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
     private Integer id;
 
     private String categoria;
@@ -21,19 +19,18 @@ public class AlmacenDetalle {
 
     private String estadoProducto;
 
-    private String Talla;
+    private String modelo;
 
-    private Date FechaRecibido;
+    private Integer codigo;
 
-    private Date FechaVencimiento;
+    private Date fechaRecibido;
 
-    private Integer produtoId;
+    private Integer productoId;
 
     @Transient
     private Producto producto;
 
-    public AlmacenDetalle(){
+    public InventarioDetalle() {
         this.precio = (double) 0;
     }
-
 }
