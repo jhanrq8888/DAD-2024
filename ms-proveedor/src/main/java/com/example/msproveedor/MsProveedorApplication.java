@@ -16,7 +16,7 @@ public class MsProveedorApplication {
     @Bean
     public OpenAPI custoOpenAPI() {
         return new OpenAPI().info(new Info()
-                .title("OPEN API MICROSERVICIO INVENTARIO")
+                .title("OPEN API MICROSERVICIO PROVEEDOR    ")
                 .version("0.0.1")
                 .description("servicio web inventario")
                 .termsOfService("http://swagger.io/terms")
