@@ -1,4 +1,4 @@
-package com.example.mspedido.dto;
+package com.example.msenvio.dto;
 
 import lombok.Data;
 
@@ -11,3 +11,4 @@ public class Cliente {
     private String telefono;
     private String direccion;
 }
+

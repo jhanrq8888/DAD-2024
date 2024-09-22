@@ -27,9 +27,9 @@ public class Inventario {
 
     private Integer proveedorId;
 
-    public Inventario() {
-        this.stock = (double) 0;
-    }
+        public Inventario() {
+            this.stock = (double) 0;
+        }
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
