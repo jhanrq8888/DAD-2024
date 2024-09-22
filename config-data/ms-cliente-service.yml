@@ -1,6 +1,6 @@
-  server:
-    port: 8089
-  springdoc:
+server:
+  port: 8089
+springdoc:
   api-docs:
     enabled: true
   swagger-ui:
