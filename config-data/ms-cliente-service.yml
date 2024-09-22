@@ -1,6 +1,6 @@
-server:
-  port: 8089
-springdoc:
+  server:
+    port: 8089
+  springdoc:
   api-docs:
     enabled: true
   swagger-ui:
@@ -14,6 +14,7 @@ spring:
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/ms_cliente
+    username: root
     password:
 eureka:
   client:
