@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ms-envio-cliente
+    name: ms-cliente-service
     active: development
   config:
     import: optional:configserver:http://root:123456@localhost:7070
