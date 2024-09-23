@@ -1,0 +1,28 @@
+server:
+  port: 8091
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+    path: /doc/swagger-ui.html
+
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: update
+      generate-ddl: true
+    show-sql: true
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/ms_metpag
+    username: root
+    password:
+
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8090/eureka
+  instance:
+    hostname: localhost
