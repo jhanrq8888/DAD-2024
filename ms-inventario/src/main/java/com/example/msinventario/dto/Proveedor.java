@@ -8,7 +8,7 @@ public class Proveedor {
 
     private String nombre; // Nombre del proveedor
 
-    private String estado; // Estado del proveedor (activo, inactivo, etc.)
+    private String empresa; // Nombre de
 
     private String direccion; // Dirección del proveedor
 
