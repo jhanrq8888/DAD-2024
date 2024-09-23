@@ -1,14 +1,13 @@
 package com.example.msenvio.dto;
 
-import lombok.Data;
+import lombok.Data; // Importa la anotación Data de Lombok para generar métodos automáticamente
 
-@Data
+@Data // Genera automáticamente los métodos getters, setters, toString, equals y hashCode
 public class Cliente {
-    private Integer id;
-    private String nombre;
-    private String apellido;
-    private String email;
-    private String telefono;
-    private String direccion;
+    private Integer id; // Identificador único del cliente
+    private String nombre; // Nombre del cliente
+    private String apellido; // Apellido del cliente
+    private String email; // Correo electrónico del cliente
+    private String telefono; // Número de teléfono del cliente
+    private String direccion; // Dirección del cliente
 }
-

@@ -9,41 +9,41 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-@RestController
-@RequestMapping("/envio")
+@RestController // Indica que esta clase es un controlador REST
+@RequestMapping("/envio") // Mapea las solicitudes HTTP a esta clase
 public class EnvioController {
 
     @Autowired
-    private EnvioService envioService;
+    private EnvioService envioService; // Inyección de dependencia del servicio de Envio
 
-    @GetMapping
+    @GetMapping // Maneja las solicitudes GET a "/envio"
     public ResponseEntity<List<Envio>> list() {
-        List<Envio> envios = envioService.list();
-        return ResponseEntity.ok(envios);
+        List<Envio> envios = envioService.list(); // Llama al servicio para obtener la lista de envíos
+        return ResponseEntity.ok(envios); // Retorna la lista en la respuesta con estado 200 OK
     }
 
-    @PostMapping
+    @PostMapping // Maneja las solicitudes POST a "/envio"
     public ResponseEntity<Envio> save(@RequestBody Envio envio) {
-        Envio savedEnvio = envioService.save(envio);
-        return ResponseEntity.ok(savedEnvio);
+        Envio savedEnvio = envioService.save(envio); // Guarda el nuevo envío a través del servicio
+        return ResponseEntity.ok(savedEnvio); // Retorna el envío guardado en la respuesta
     }
 
-    @PutMapping
+    @PutMapping // Maneja las solicitudes PUT a "/envio"
     public ResponseEntity<Envio> update(@RequestBody Envio envio) {
-        Envio updatedEnvio = envioService.update(envio);
-        return ResponseEntity.ok(updatedEnvio);
+        Envio updatedEnvio = envioService.update(envio); // Actualiza el envío existente a través del servicio
+        return ResponseEntity.ok(updatedEnvio); // Retorna el envío actualizado en la respuesta
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // Maneja las solicitudes GET a "/envio/{id}"
     public ResponseEntity<Envio> listById(@PathVariable Integer id) {
-        Optional<Envio> envio = envioService.findById(id);
-        return envio.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Envio> envio = envioService.findById(id); // Busca el envío por ID
+        return envio.map(ResponseEntity::ok) // Si se encuentra, retorna el envío con estado 200 OK
+                .orElseGet(() -> ResponseEntity.notFound().build()); // Si no se encuentra, retorna estado 404 Not Found
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") // Maneja las solicitudes DELETE a "/envio/{id}"
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
-        envioService.deleteById(id);
-        return ResponseEntity.ok("Eliminación Correcta");
+        envioService.deleteById(id); // Elimina el envío por ID a través del servicio
+        return ResponseEntity.ok("Eliminación Correcta"); // Retorna un mensaje de éxito
     }
 }

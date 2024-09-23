@@ -1,24 +1,23 @@
 package com.example.msproveedor.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.Data;
+import jakarta.persistence.Entity; // Importa la anotación para definir una entidad JPA
+import jakarta.persistence.GeneratedValue; // Importa la anotación para definir la generación de valores
+import jakarta.persistence.GenerationType; // Importa los tipos de generación de valores
+import jakarta.persistence.Id; // Importa la anotación para definir la clave primaria
+import lombok.Data; // Importa la anotación de Lombok para generación automática de métodos
 
-@Data
-@Entity
+@Data // Genera automáticamente métodos getters, setters, equals, hashCode y toString
+@Entity // Indica que esta clase es una entidad JPA
 public class Proveedor {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // Define este campo como la clave primaria
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Define que el valor se generará automáticamente
+    private Integer Id; // ID del proveedor
 
-    private Integer Id;
+    private String nombre; // Nombre del proveedor
 
-    private String nombre;
+    private String empresa; // Nombre de la empresa del proveedor
 
-    private String empresa;
+    private String direction; // Dirección del proveedor
 
-    private String direction;
-
-    private Integer telefono;
+    private Integer telefono; // Número de teléfono del proveedor
 }

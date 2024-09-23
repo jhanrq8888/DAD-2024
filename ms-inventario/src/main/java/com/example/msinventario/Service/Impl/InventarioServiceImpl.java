@@ -1,6 +1,5 @@
 package com.example.msinventario.Service.Impl;
 
-
 import com.example.msinventario.Entity.Inventario;
 import com.example.msinventario.Entity.InventarioDetalle;
 import com.example.msinventario.Repository.InventarioRepository;
@@ -50,18 +49,24 @@ public class InventarioServiceImpl implements InventarioService {
 
     @Override
     public Optional<Inventario> listarPorId(Integer id) {
-        Inventario inventario = inventarioRepository.findById(id).get();
+        Inventario inventario = inventarioRepository.findById(id).orElse(null);
+        if (inventario == null) {
+            return Optional.empty(); // Devuelve vacío si no se encuentra el inventario
+        }
+
+        // Obtener proveedor mediante el cliente Feign
         Proveedor proveedor = proveedorFeign.listById(inventario.getProveedorId()).getBody();
 
+        // Obtener detalles del inventario y sus productos
         List<InventarioDetalle> inventarioDetalles = inventario.getInventarioDetalle().stream().map(inventarioDetalle -> {
             Producto producto = productoFeign.listById(inventarioDetalle.getProductoId()).getBody();
-            inventarioDetalle.setProducto(producto);
+            inventarioDetalle.setProducto(producto); // Asigna el producto al detalle
             return inventarioDetalle;
         }).collect(Collectors.toList());
 
-        inventario.setInventarioDetalle(inventarioDetalles);
-        inventario.setProveedor(proveedor);
-        return Optional.of(inventario);
+        inventario.setInventarioDetalle(inventarioDetalles); // Asigna la lista de detalles al inventario
+        inventario.setProveedor(proveedor); // Asigna el proveedor al inventario
+        return Optional.of(inventario); // Retorna el inventario completo
     }
 
     @Override

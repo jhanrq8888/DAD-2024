@@ -1,36 +1,37 @@
 package com.example.msinventario.Entity;
 
-import com.example.msinventario.dto.Producto;
-import jakarta.persistence.*;
-import lombok.Data;
+import com.example.msinventario.dto.Producto; // Importa el DTO de Producto
+import jakarta.persistence.*; // Importa anotaciones de JPA
+import lombok.Data; // Importa la anotación de Lombok para generar automáticamente getters y setters
 
-import java.util.Date;
+import java.util.Date; // Importa la clase Date para manejar fechas
 
-@Entity
-@Data
+@Entity // Indica que esta clase es una entidad JPA
+@Data // Genera automáticamente los métodos getters, setters, toString, equals y hashCode
 public class InventarioDetalle {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Id // Indica que este campo es la clave primaria
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Genera automáticamente el valor de ID
+    private Integer id; // ID único del detalle de inventario
 
-    private String categoria;
+    private String categoria; // Categoría del producto
 
-    private Double precio;
+    private Double precio; // Precio del producto
 
-    private String estadoProducto;
+    private String estadoProducto; // Estado del producto (ej. disponible, agotado)
 
-    private String modelo;
+    private String modelo; // Modelo del producto
 
-    private Integer codigo;
+    private Integer codigo; // Código único del producto
 
-    private Date fechaRecibido;
+    private Date fechaRecibido; // Fecha en que se recibió el producto
 
-    private Integer productoId;
+    private Integer productoId; // ID del producto relacionado
 
-    @Transient
-    private Producto producto;
+    @Transient // Indica que este campo no se persiste en la base de datos
+    private Producto producto; // Objeto Producto, no persistido en la base de datos
 
+    // Constructor por defecto que inicializa precio a 0
     public InventarioDetalle() {
-        this.precio = (double) 0;
+        this.precio = 0.0; // Inicializa el precio a 0.0
     }
 }

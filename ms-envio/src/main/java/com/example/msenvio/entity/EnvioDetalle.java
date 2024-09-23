@@ -1,14 +1,14 @@
 package com.example.msenvio.entity;
 
-import com.example.msenvio.dto.Producto;
-import jakarta.persistence.*;
-import lombok.Data;
+import com.example.msenvio.dto.Producto; // Importa el DTO Producto
+import jakarta.persistence.*; // Importa las anotaciones de JPA
+import lombok.Data; // Importa la anotación Data de Lombok
 
-@Entity
-@Data
+@Entity // Indica que esta clase es una entidad JPA
+@Data // Genera automáticamente métodos getters, setters, toString, equals y hashCode
 public class EnvioDetalle {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // Marca el campo id como la clave primaria
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Genera el valor del ID automáticamente
     private Integer id;
 
     private Integer cantidad; // Cantidad de productos
@@ -21,9 +21,10 @@ public class EnvioDetalle {
 
     private Integer productoId; // ID del producto
 
-    @Transient
+    @Transient // Indica que este campo no debe ser persistido en la base de datos
     private Producto producto; // Objeto Producto, no persistido en la base de datos
 
+    // Constructor por defecto
     public EnvioDetalle() {
         this.precioUnitario = 0.0; // Inicializa el precio unitario a 0.0
         this.cantidad = 0; // Inicializa la cantidad a 0
@@ -31,6 +32,6 @@ public class EnvioDetalle {
 
     // Getter para productoId
     public Integer getProductoId() {
-        return productoId;
+        return productoId; // Retorna el ID del producto
     }
 }
