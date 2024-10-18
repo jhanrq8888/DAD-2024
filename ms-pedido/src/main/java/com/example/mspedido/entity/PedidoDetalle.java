@@ -15,7 +15,7 @@ public class PedidoDetalle {
     private Double precio;
     private Integer productoId;
     @Transient
-    private ProductoDto producto;
+    private ProductoDto productoDto;
 
 
     public PedidoDetalle() {
