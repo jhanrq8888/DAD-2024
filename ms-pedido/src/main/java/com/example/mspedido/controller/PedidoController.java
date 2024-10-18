@@ -43,7 +43,7 @@ public class PedidoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
-        pedidoService.deleteById(id);
+        pedidoService.delete(id);
         return ResponseEntity.ok("Eliminación Correcta");
     }
 }
