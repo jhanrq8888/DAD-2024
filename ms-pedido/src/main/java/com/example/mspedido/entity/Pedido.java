@@ -1,6 +1,6 @@
 package com.example.mspedido.entity;
 
-import com.example.mspedido.dto.Cliente;
+import com.example.mspedido.dto.ClienteDto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -23,6 +23,6 @@ public class Pedido {
     private List<PedidoDetalle> detalle;
 
     @Transient
-    private Cliente cliente;
+    private ClienteDto cliente;
 
 }

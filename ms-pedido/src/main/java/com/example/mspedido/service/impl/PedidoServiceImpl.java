@@ -1,7 +1,7 @@
 package com.example.mspedido.service.impl;
 
-import com.example.mspedido.dto.Cliente;
-import com.example.mspedido.dto.Producto;
+import com.example.mspedido.dto.ClienteDto;
+import com.example.mspedido.dto.ProductoDto;
 import com.example.mspedido.entity.Pedido;
 import com.example.mspedido.entity.PedidoDetalle;
 import com.example.mspedido.feign.ClienteFeign;
@@ -53,11 +53,11 @@ public class PedidoServiceImpl implements PedidoService {
         Optional<Pedido> optionalPedido = pedidoRepository.findById(id);
         if (optionalPedido.isPresent()) {
             Pedido pedido = optionalPedido.get();
-            ResponseEntity<Cliente> clienteResponse = clienteFeign.listById(pedido.getClienteId());
-            Cliente cliente = clienteResponse.getBody();
+            ResponseEntity<ClienteDto> clienteResponse = clienteFeign.listById(pedido.getClienteId());
+            ClienteDto cliente = clienteResponse.getBody();
             List<PedidoDetalle> pedidoDetalles = pedido.getDetalle().stream().map(pedidoDetalle -> {
-                ResponseEntity<Producto> productoResponse = productoFeign.listById(pedidoDetalle.getProductoId());
-                Producto producto = productoResponse.getBody();
+                ResponseEntity<ProductoDto> productoResponse = productoFeign.listById(pedidoDetalle.getProductoId());
+                ProductoDto producto = productoResponse.getBody();
                 pedidoDetalle.setProducto(producto);
                 return pedidoDetalle;
             }).collect(Collectors.toList());
