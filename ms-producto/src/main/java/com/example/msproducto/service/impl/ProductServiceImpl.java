@@ -1,6 +1,6 @@
 package com.example.msproducto.service.impl;
-import com.example.msproducto.entity.Product;
-import com.example.msproducto.repository.ProductRepository;
+import com.example.msproducto.entity.Producto;
+import com.example.msproducto.repository.ProductoRepository;
 import com.example.msproducto.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,25 +12,25 @@ import java.util.Optional;
 public class    ProductServiceImpl implements ProductService {
 
     @Autowired
-    private ProductRepository productRepository;
+    private ProductoRepository productRepository;
 
     @Override
-    public List<Product> list() {
+    public List<Producto> list() {
         return productRepository.findAll();
     }
 
     @Override
-    public Product save(Product product) {
+    public Producto save(Producto product) {
         return productRepository.save(product);
     }
 
     @Override
-    public Product update(Product product) {
+    public Producto update(Producto product) {
         return productRepository.save(product);
     }
 
     @Override
-    public Optional<Product> findById(Integer id) {
+    public Optional<Producto> findById(Integer id) {
         return productRepository.findById(id);
     }
 

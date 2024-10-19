@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Optional;
 
-@FeignClient(name = "ms-catalogo-service", path = "/product")
+@FeignClient(name = "ms-producto-service", path = "/product")
 public interface ProductoFeign {
     @GetMapping("/{id}")
     @CircuitBreaker(name = "productListByIdCB", fallbackMethod = "productListById")

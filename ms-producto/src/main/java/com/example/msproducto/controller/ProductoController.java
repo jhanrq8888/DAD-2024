@@ -1,6 +1,6 @@
 package com.example.msproducto.controller;
 
-import com.example.msproducto.entity.Product;
+import com.example.msproducto.entity.Producto;
 import com.example.msproducto.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,32 +11,32 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/product")
-public class ProductController {
+public class ProductoController {
 
     @Autowired
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<Product>> list() {
-        List<Product> products = productService.list();
+    public ResponseEntity<List<Producto>> list() {
+        List<Producto> products = productService.list();
         return ResponseEntity.ok(products);
     }
 
     @PostMapping
-    public ResponseEntity<Product> save(@RequestBody Product product) {
-        Product savedProduct = productService.save(product);
+    public ResponseEntity<Producto> save(@RequestBody Producto product) {
+        Producto savedProduct = productService.save(product);
         return ResponseEntity.ok(savedProduct);
     }
 
     @PutMapping
-    public ResponseEntity<Product> update(@RequestBody Product product) {
-        Product updatedProduct = productService.update(product);
+    public ResponseEntity<Producto> update(@RequestBody Producto product) {
+        Producto updatedProduct = productService.update(product);
         return ResponseEntity.ok(updatedProduct);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Product> listById(@PathVariable Integer id) {
-        Optional<Product> product = productService.findById(id);
+    public ResponseEntity<Producto> listById(@PathVariable Integer id) {
+        Optional<Producto> product = productService.findById(id);
         return product.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

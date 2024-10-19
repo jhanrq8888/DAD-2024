@@ -1,13 +1,13 @@
 package com.example.msproducto.service;
 
-import com.example.msproducto.entity.Product;
+import com.example.msproducto.entity.Producto;
 import java.util.List;
 import java.util.Optional;
 
 public interface ProductService {
-    public List<Product> list();
-    public Product save(Product Product);
-    public Product update(Product Product);
-    public Optional<Product> findById(Integer id);
+    public List<Producto> list();
+    public Producto save(Producto Product);
+    public Producto update(Producto Product);
+    public Optional<Producto> findById(Integer id);
     public void deleteById(Integer id);
 }
