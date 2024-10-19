@@ -45,13 +45,13 @@ public class InventarioServiceImpl implements InventarioService {
             Inventario inventario = inventarioOptional.get();
 
             // Obtener proveedor mediante el cliente Feign
-            ProveedorDto proveedorDto = proveedorFeign.listById(inventario.getProveedorId()).getBody();
+            ProveedorDto proveedorDto = proveedorFeign.getById(inventario.getProveedorId()).getBody();
             inventario.setProveedor(proveedorDto);
 
             // Recorre los detalles del inventario solo si el inventario existe
             for (InventarioDetalle detalleInventario : inventario.getInventarioDetalle()) {
                 // Obtiene el producto asociado al detalle del inventario y lo establece
-                ProductoDto productoDto = productoFeign.listById(detalleInventario.getProductoId()).getBody();
+                ProductoDto productoDto = productoFeign.getById(detalleInventario.getProductoId()).getBody();
                 detalleInventario.setProducto(productoDto);
             }
 
