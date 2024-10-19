@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface ProveedorFeign {
 
     @GetMapping("/{id}")
-    @CircuitBreaker(name = "proveedorListByIdCB", fallbackMethod = "proveedorListById")
+    @CircuitBreaker(name = "proveedorGetByIdCB", fallbackMethod = "fallbackGetById")
     public ResponseEntity<ProveedorDto> getById(@PathVariable Integer id);
 
-    default ResponseEntity<ProveedorDto> proveedorListByIdFallback(Integer id, Exception e) {
-        // Puedes retornar un objeto por defecto en caso de que falle el servicio
+    // Fallback method when the service is down
+    default ResponseEntity<ProveedorDto> fallbackGetById(Integer id, Throwable e) {
+        // Log the exception or return a default value
         return ResponseEntity.ok(new ProveedorDto());
     }
 }
