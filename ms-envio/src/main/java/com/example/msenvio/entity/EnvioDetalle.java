@@ -1,6 +1,6 @@
 package com.example.msenvio.entity;
 
-import com.example.msenvio.dto.Producto; // Importa el DTO Producto
+import com.example.msenvio.dto.ProductoDto; // Importa el DTO Producto
 import jakarta.persistence.*; // Importa las anotaciones de JPA
 import lombok.Data; // Importa la anotación Data de Lombok
 
@@ -22,7 +22,7 @@ public class EnvioDetalle {
     private Integer productoId; // ID del producto
 
     @Transient // Indica que este campo no debe ser persistido en la base de datos
-    private Producto producto; // Objeto Producto, no persistido en la base de datos
+    private ProductoDto productoDto; // Objeto Producto, no persistido en la base de datos
 
     // Constructor por defecto
     public EnvioDetalle() {

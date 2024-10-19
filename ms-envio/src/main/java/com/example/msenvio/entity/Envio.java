@@ -1,6 +1,6 @@
 package com.example.msenvio.entity;
 
-import com.example.msenvio.dto.Cliente; // Importa el DTO Cliente
+import com.example.msenvio.dto.ClienteDto; // Importa el DTO Cliente
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties; // Para ignorar propiedades en JSON
 import jakarta.persistence.*; // Importa las anotaciones de JPA
 import lombok.Data; // Importa la anotación Data de Lombok
@@ -30,5 +30,5 @@ public class Envio {
 
     // Cliente se trata como un dato transitorio que no se guarda en la BD
     @Transient // Indica que este campo no debe ser persistido en la base de datos
-    private Cliente cliente; // Información del cliente asociada al envío
+    private ClienteDto clienteDto; // Información del cliente asociada al envío
 }

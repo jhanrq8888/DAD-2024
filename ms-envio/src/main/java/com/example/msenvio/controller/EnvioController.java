@@ -42,8 +42,8 @@ public class EnvioController {
     }
 
     @DeleteMapping("/{id}") // Maneja las solicitudes DELETE a "/envio/{id}"
-    public ResponseEntity<String> deleteById(@PathVariable Integer id) {
-        envioService.deleteById(id); // Elimina el envío por ID a través del servicio
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
+        envioService.delete(id); // Elimina el envío por ID a través del servicio
         return ResponseEntity.ok("Eliminación Correcta"); // Retorna un mensaje de éxito
     }
 }
