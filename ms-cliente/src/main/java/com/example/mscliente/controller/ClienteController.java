@@ -48,7 +48,7 @@ public class ClienteController {
     // Eliminar un cliente por su ID
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
-        clienteService.deleteById(id);
+        clienteService.delete(id);
         return ResponseEntity.ok("Eliminación Correcta");
     }
 }
