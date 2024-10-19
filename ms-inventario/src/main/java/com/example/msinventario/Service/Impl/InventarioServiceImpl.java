@@ -1,19 +1,18 @@
 package com.example.msinventario.Service.Impl;
 
+import com.example.msinventario.dto.ProductoDto;
+import com.example.msinventario.dto.ProveedorDto;
 import com.example.msinventario.Entity.Inventario;
 import com.example.msinventario.Entity.InventarioDetalle;
-import com.example.msinventario.Repository.InventarioRepository;
-import com.example.msinventario.Service.InventarioService;
-import com.example.msinventario.dto.Producto;
-import com.example.msinventario.dto.Proveedor;
 import com.example.msinventario.feign.ProductoFeign;
 import com.example.msinventario.feign.ProveedorFeign;
+import com.example.msinventario.Repository.InventarioRepository;
+import com.example.msinventario.Service.InventarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class InventarioServiceImpl implements InventarioService {
@@ -38,39 +37,40 @@ public class InventarioServiceImpl implements InventarioService {
     }
 
     @Override
+    public Optional<Inventario> findById(Integer id) {
+        Optional<Inventario> inventarioOptional = inventarioRepository.findById(id);
+
+        // Verifica si el Optional contiene un valor
+        if (inventarioOptional.isPresent()) {
+            Inventario inventario = inventarioOptional.get();
+
+            // Obtener proveedor mediante el cliente Feign
+            ProveedorDto proveedorDto = proveedorFeign.listById(inventario.getProveedorId()).getBody();
+            inventario.setProveedor(proveedorDto);
+
+            // Recorre los detalles del inventario solo si el inventario existe
+            for (InventarioDetalle detalleInventario : inventario.getInventarioDetalle()) {
+                // Obtiene el producto asociado al detalle del inventario y lo establece
+                ProductoDto productoDto = productoFeign.listById(detalleInventario.getProductoId()).getBody();
+                detalleInventario.setProducto(productoDto);
+            }
+
+            // Retorna el Optional con el inventario modificado
+            return Optional.of(inventario);
+        } else {
+            // Maneja el caso en que el inventario no se encuentra, por ejemplo:
+            // Lanzar una excepción personalizada o retornar un Optional vacío
+            return Optional.empty();
+        }
+    }
+
+    @Override
+    public void delete(Integer id) {
+        inventarioRepository.deleteById(id);
+    }
+
+    @Override
     public Inventario update(Inventario inventario) {
         return inventarioRepository.save(inventario);
-    }
-
-    @Override
-    public Optional<Inventario> findById(Integer id) {
-        return inventarioRepository.findById(id);
-    }
-
-    @Override
-    public Optional<Inventario> listarPorId(Integer id) {
-        Inventario inventario = inventarioRepository.findById(id).orElse(null);
-        if (inventario == null) {
-            return Optional.empty(); // Devuelve vacío si no se encuentra el inventario
-        }
-
-        // Obtener proveedor mediante el cliente Feign
-        Proveedor proveedor = proveedorFeign.listById(inventario.getProveedorId()).getBody();
-
-        // Obtener detalles del inventario y sus productos
-        List<InventarioDetalle> inventarioDetalles = inventario.getInventarioDetalle().stream().map(inventarioDetalle -> {
-            Producto producto = productoFeign.listById(inventarioDetalle.getProductoId()).getBody();
-            inventarioDetalle.setProducto(producto); // Asigna el producto al detalle
-            return inventarioDetalle;
-        }).collect(Collectors.toList());
-
-        inventario.setInventarioDetalle(inventarioDetalles); // Asigna la lista de detalles al inventario
-        inventario.setProveedor(proveedor); // Asigna el proveedor al inventario
-        return Optional.of(inventario); // Retorna el inventario completo
-    }
-
-    @Override
-    public void deleteById(Integer id) {
-        inventarioRepository.deleteById(id);
     }
 }

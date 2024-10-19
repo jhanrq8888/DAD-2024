@@ -43,7 +43,7 @@ public class InventarioController {
 
     @DeleteMapping("/{id}") // Maneja las solicitudes DELETE a /inventario/{id}
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
-        inventarioService.deleteById(id); // Elimina el inventario por ID
+        inventarioService.delete(id); // Elimina el inventario por ID
         return ResponseEntity.ok("Eliminación Correcta"); // Retorna un mensaje de éxito
     }
 }

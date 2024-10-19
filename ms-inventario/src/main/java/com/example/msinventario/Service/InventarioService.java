@@ -12,9 +12,7 @@ public interface InventarioService {
 
     public Inventario update(Inventario inventario); // Actualiza un inventario existente.
 
-    public Optional<Inventario> findById(Integer id); // Busca un inventario por ID y devuelve un Optional.
+    Optional<Inventario> findById(Integer id); // Busca un inventario por ID y obtiene proveedor y detalles.
 
-    Optional<Inventario> listarPorId(Integer id); // Busca un inventario por ID y obtiene proveedor y detalles.
-
-    public void deleteById(Integer id); // Elimina un inventario por ID.
+    public void delete(Integer id); // Elimina un inventario por ID.
 }

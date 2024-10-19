@@ -16,5 +16,4 @@ public class Product {
     private String modelo;
     private Integer codigo;
 
-
 }

@@ -10,5 +10,5 @@ public interface ClienteService {
     public Cliente save(Cliente cliente);  // Guardar un nuevo cliente
     public Cliente update(Cliente cliente);  // Actualizar un cliente existente
     public Optional<Cliente> findById(Integer id);  // Buscar un cliente por su ID
-    public void deleteById(Integer id);  // Eliminar un cliente por su ID
+    public void delete(Integer id);  // Eliminar un cliente por su ID
 }

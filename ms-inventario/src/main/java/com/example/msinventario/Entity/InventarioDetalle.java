@@ -1,6 +1,6 @@
 package com.example.msinventario.Entity;
 
-import com.example.msinventario.dto.Producto; // Importa el DTO de Producto
+import com.example.msinventario.dto.ProductoDto; // Importa el DTO de Producto
 import jakarta.persistence.*; // Importa anotaciones de JPA
 import lombok.Data; // Importa la anotación de Lombok para generar automáticamente getters y setters
 
@@ -28,7 +28,7 @@ public class InventarioDetalle {
     private Integer productoId; // ID del producto relacionado
 
     @Transient // Indica que este campo no se persiste en la base de datos
-    private Producto producto; // Objeto Producto, no persistido en la base de datos
+    private ProductoDto producto; // Objeto Producto, no persistido en la base de datos
 
     // Constructor por defecto que inicializa precio a 0
     public InventarioDetalle() {

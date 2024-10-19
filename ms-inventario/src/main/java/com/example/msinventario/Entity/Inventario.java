@@ -1,6 +1,6 @@
 package com.example.msinventario.Entity;
 
-import com.example.msinventario.dto.Proveedor; // Importa el DTO de Proveedor
+import com.example.msinventario.dto.ProveedorDto; // Importa el DTO de Proveedor
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties; // Para ignorar propiedades durante la serialización
 import jakarta.persistence.*; // Importa anotaciones de JPA
 import lombok.Data; // Importa la anotación de Lombok para generar automáticamente getters y setters
@@ -37,5 +37,5 @@ public class Inventario {
     private List<InventarioDetalle> inventarioDetalle; // Lista de detalles de inventario
 
     @Transient // Indica que este campo no se persiste en la base de datos
-    private Proveedor proveedor; // Objeto Proveedor, no persistido en la base de datos
+    private ProveedorDto proveedor; // Objeto Proveedor, no persistido en la base de datos
 }
