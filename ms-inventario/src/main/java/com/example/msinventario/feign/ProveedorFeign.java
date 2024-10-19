@@ -13,15 +13,13 @@ public interface ProveedorFeign {
 
     // Método para obtener un proveedor por su ID
     @GetMapping("/{id}")
-    @CircuitBreaker(name = "proveedorListByIdCB", fallbackMethod = "proveedorListByIdFallback")
-    public ResponseEntity<ProveedorDto> getById(@PathVariable(required = true) Integer id);
+    @CircuitBreaker(name = "proveedorListByIdCB", fallbackMethod = "proveedorListById")
+    public ResponseEntity<ProveedorDto> getById(@PathVariable Integer id);
 
     // Método fallback que se ejecuta si la llamada al servicio de proveedores falla
-    default ResponseEntity<ProveedorDto> proveedorListByIdFallback(Integer id, Throwable throwable) {
+    default ResponseEntity<ProveedorDto> proveedorListById(Integer id, Exception e) {
         // Retorna un ProveedorDto vacío o con valores predeterminados
-        ProveedorDto fallbackProveedor = new ProveedorDto();
-        fallbackProveedor.setId(0); // Puedes establecer valores por defecto
-        fallbackProveedor.setNombre("Proveedor no disponible"); // Mensaje por defecto
-        return ResponseEntity.ok(fallbackProveedor);
+
+        return ResponseEntity.ok(new ProveedorDto());
     }
 }
