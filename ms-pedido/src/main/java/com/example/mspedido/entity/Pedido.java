@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Data
-@Table(name="orders")
+@Table(name="pedido")
 public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,7 +20,7 @@ public class Pedido {
     private Integer clienteId;
     @JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "venta_id")
+    @JoinColumn(name = "pedido_id")
     private List<PedidoDetalle> pedidodetalle;
 
     @Transient
