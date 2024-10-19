@@ -1,4 +1,4 @@
-package com.example.msauth.dto;
+package org.example.msauth.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

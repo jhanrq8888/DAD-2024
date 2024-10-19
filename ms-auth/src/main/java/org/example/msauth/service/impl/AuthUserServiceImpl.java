@@ -1,13 +1,13 @@
-package com.example.msauth.service.impl;
+package org.example.msauth.service.impl;
 
-import com.example.msauth.dto.AuthUserDto;
-import com.example.msauth.entity.AuthUser;
-import com.example.msauth.entity.TokenDto;
+import org.example.msauth.dto.AuthUserDto;
+import org.example.msauth.entity.AuthUser;
+import org.example.msauth.entity.TokenDto;
 
 
-import com.example.msauth.repository.AuthUserRepository;
-import com.example.msauth.security.JwtProvider;
-import com.example.msauth.service.AuthUserService;
+import org.example.msauth.repository.AuthUserRepository;
+import org.example.msauth.security.JwtProvider;
+import org.example.msauth.service.AuthUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

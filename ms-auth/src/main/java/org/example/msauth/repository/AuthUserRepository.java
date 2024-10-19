@@ -1,6 +1,6 @@
-package com.example.msauth.repository;
+package org.example.msauth.repository;
 
-import com.example.msauth.entity.AuthUser;
+import org.example.msauth.entity.AuthUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

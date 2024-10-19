@@ -1,8 +1,9 @@
-package com.example.msauth.service;
+package org.example.msauth.service;
 
-import com.example.msauth.dto.AuthUserDto;
-import com.example.msauth.entity.AuthUser;
-import com.example.msauth.entity.TokenDto;
+
+import org.example.msauth.dto.AuthUserDto;
+import org.example.msauth.entity.AuthUser;
+import org.example.msauth.entity.TokenDto;
 
 public interface AuthUserService {
     public AuthUser save(AuthUserDto authUserDto);

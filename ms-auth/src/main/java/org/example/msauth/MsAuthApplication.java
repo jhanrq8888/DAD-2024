@@ -1,4 +1,4 @@
-package com.example.msauth;
+package org.example.msauth;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

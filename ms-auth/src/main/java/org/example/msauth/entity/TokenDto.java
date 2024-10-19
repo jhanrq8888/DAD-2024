@@ -1,4 +1,4 @@
-package com.example.msauth.entity;
+package org.example.msauth.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

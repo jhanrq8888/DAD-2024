@@ -1,4 +1,4 @@
-package com.example.msauth;
+package org.example.msauth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -1,4 +1,4 @@
-package com.example.msauth.security;
+package org.example.msauth.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
