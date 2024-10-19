@@ -26,7 +26,7 @@ spring:
           predicates:
             - Path=/category/**
           filters:
-            -AuthFilter
+            - AuthFilter
         - id: ms-auth-service
           uri: lb://ms-auth-service
           predicates:
