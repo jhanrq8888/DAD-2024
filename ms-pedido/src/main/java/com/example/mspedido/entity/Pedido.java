@@ -9,6 +9,7 @@ import java.util.List;
 
 @Entity
 @Data
+@Table(name="pedidos")
 public class Pedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +24,6 @@ public class Pedido {
     private List<PedidoDetalle> pedidodetalle;
 
     @Transient
-    private ClienteDto cliente;
+    private ClienteDto clienteDto;
 
 }
