@@ -7,16 +7,13 @@ import org.springframework.http.ResponseEntity; // Importa la clase ResponseEnti
 import org.springframework.web.bind.annotation.GetMapping; // Importa la anotación para manejar solicitudes GET
 import org.springframework.web.bind.annotation.PathVariable; // Importa la anotación para manejar variables de ruta
 
-// Define un cliente Feign para interactuar con el microservicio de catálogo
 @FeignClient(name = "ms-producto-service", path = "/product")
 public interface ProductoFeign {
     @GetMapping("/{id}")
-    @CircuitBreaker(name = "productoByIdCB", fallbackMethod = "productoByIdFallback")
+    @CircuitBreaker(name = "productListByIdCB", fallbackMethod = "productListById")
     public ResponseEntity<ProductoDto> getById(@PathVariable Integer id);
-
-    // Método de fallback para manejar fallos en la llamada
-    default ResponseEntity<ProductoDto> productoListById(Integer id, Exception e) {
-        // Aquí puedes retornar un objeto ProductoDto vacío o un valor predeterminado
-        return ResponseEntity.ok(new ProductoDto()); // Retorna un ProductoDto vacío en caso de error
+    default ResponseEntity<ProductoDto> productListById(Integer id, Exception e) {
+        return ResponseEntity.ok(new ProductoDto());
     }
+
 }
