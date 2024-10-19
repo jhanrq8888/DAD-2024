@@ -37,5 +37,5 @@ public class Inventario {
     private List<InventarioDetalle> inventarioDetalle; // Lista de detalles de inventario
 
     @Transient // Indica que este campo no se persiste en la base de datos
-    private ProveedorDto proveedor; // Objeto Proveedor, no persistido en la base de datos
+    private ProveedorDto proveedorDto; // Objeto Proveedor, no persistido en la base de datos
 }

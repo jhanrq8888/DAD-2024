@@ -28,7 +28,7 @@ public class InventarioDetalle {
     private Integer productoId; // ID del producto relacionado
 
     @Transient // Indica que este campo no se persiste en la base de datos
-    private ProductoDto producto; // Objeto Producto, no persistido en la base de datos
+    private ProductoDto productoDto; // Objeto Producto, no persistido en la base de datos
 
     // Constructor por defecto que inicializa precio a 0
     public InventarioDetalle() {
