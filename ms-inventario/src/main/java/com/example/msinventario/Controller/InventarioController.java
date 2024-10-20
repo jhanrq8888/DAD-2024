@@ -1,49 +1,74 @@
 package com.example.msinventario.Controller;
+import com.example.msinventario.dto.ErrorResponseDto;
+import com.example.msinventario.dto.ProductoDto;
+import com.example.msinventario.dto.ProveedorDto;
+import com.example.msinventario.Entity.Inventario;
+import com.example.msinventario.Entity.InventarioDetalle;
+import com.example.msinventario.feign.ProductoFeign;
+import com.example.msinventario.feign.ProveedorFeign;
+import com.example.msinventario.Service.InventarioService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import com.example.msinventario.Entity.Inventario; // Importa la entidad Inventario
-import com.example.msinventario.Service.InventarioService; // Importa el servicio de Inventario
-import org.springframework.beans.factory.annotation.Autowired; // Importa la anotación para la inyección de dependencias
-import org.springframework.http.ResponseEntity; // Importa la clase para crear respuestas HTTP
-import org.springframework.web.bind.annotation.*; // Importa las anotaciones para los controladores REST
+import java.util.List;
+import java.util.Optional;
 
-import java.util.List; // Importa la clase List
-import java.util.Optional; // Importa la clase Optional
-
-@RestController // Indica que esta clase es un controlador REST
-@RequestMapping("/inventario") // Define la ruta base para las operaciones del inventario
+@RestController
+@RequestMapping("/inventario")
 public class InventarioController {
 
-    @Autowired // Inyecta el servicio de inventario
+    @Autowired
     private InventarioService inventarioService;
 
-    @GetMapping // Maneja las solicitudes GET a /inventario
-    public ResponseEntity<List<Inventario>> list() {
-        List<Inventario> inventarios = inventarioService.list(); // Obtiene la lista de inventarios
-        return ResponseEntity.ok(inventarios); // Retorna la lista en la respuesta
+    @Autowired
+    private ProductoFeign productoFeign;
+
+    @Autowired
+    private ProveedorFeign proveedorFeign;
+
+    @GetMapping
+    public ResponseEntity<List<Inventario>> getAll() {
+        return ResponseEntity.ok(inventarioService.list());
     }
 
-    @PostMapping // Maneja las solicitudes POST a /inventario
-    public ResponseEntity<Inventario> save(@RequestBody Inventario inventario) {
-        Inventario savedInventario = inventarioService.save(inventario); // Guarda el nuevo inventario
-        return ResponseEntity.ok(savedInventario); // Retorna el inventario guardado
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Inventario>> getById(@PathVariable Integer id) {
+        return ResponseEntity.ok(inventarioService.findById(id));
     }
 
-    @PutMapping // Maneja las solicitudes PUT a /inventario
-    public ResponseEntity<Inventario> update(@RequestBody Inventario inventario) {
-        Inventario updatedInventario = inventarioService.update(inventario); // Actualiza el inventario existente
-        return ResponseEntity.ok(updatedInventario); // Retorna el inventario actualizado
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody Inventario inventario) {
+        ProveedorDto proveedorDto = proveedorFeign.getById(inventario.getProveedorId()).getBody();
+
+        if (proveedorDto == null || proveedorDto.getId() == null) {
+            String errorMessage = "Error: Proveedor no encontrado.";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(errorMessage));
+        }
+
+        for (InventarioDetalle inventarioDetalle : inventario.getInventarioDetalle()) {
+            ProductoDto productoDto = productoFeign.getById(inventarioDetalle.getProductoId()).getBody();
+
+            if (productoDto == null || productoDto.getId() == null) {
+                String errorMessage = "Error: Producto no encontrado.";
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(errorMessage));
+            }
+        }
+
+        Inventario nuevoInventario = inventarioService.save(inventario);
+        return ResponseEntity.ok(nuevoInventario);
     }
 
-    @GetMapping("/{id}") // Maneja las solicitudes GET a /inventario/{id}
-    public ResponseEntity<Inventario> listById(@PathVariable Integer id) {
-        Optional<Inventario> inventario = inventarioService.findById(id); // Busca el inventario por ID
-        return inventario.map(ResponseEntity::ok) // Si se encuentra, retorna el inventario
-                .orElseGet(() -> ResponseEntity.notFound().build()); // Si no se encuentra, retorna un 404
+    @PutMapping("/{id}")
+    public ResponseEntity<Inventario> update(@PathVariable Integer id, @RequestBody Inventario inventario) {
+        inventario.setId(id);
+        return ResponseEntity.ok(inventarioService.save(inventario));
     }
 
-    @DeleteMapping("/{id}") // Maneja las solicitudes DELETE a /inventario/{id}
-    public ResponseEntity<String> deleteById(@PathVariable Integer id) {
-        inventarioService.delete(id); // Elimina el inventario por ID
-        return ResponseEntity.ok("Eliminación Correcta"); // Retorna un mensaje de éxito
+    @DeleteMapping("/{id}")
+    public ResponseEntity<List<Inventario>> delete(@PathVariable Integer id) {
+        inventarioService.delete(id);
+        return ResponseEntity.ok(inventarioService.list());
     }
 }
