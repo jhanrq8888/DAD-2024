@@ -1,5 +1,6 @@
 package com.example.mspedido.service.impl;
 
+import com.example.mspedido.dto.ClienteDto;
 import com.example.mspedido.dto.ProductoDto;
 import com.example.mspedido.entity.Pedido;
 import com.example.mspedido.entity.PedidoDetalle;
@@ -20,10 +21,10 @@ public class PedidoServiceImpl implements PedidoService {
     private PedidoRepository pedidoRepository;
 
     @Autowired
-    private ProductoFeign productoFeign;
+    private ClienteFeign clienteFeign;
 
     @Autowired
-    private ClienteFeign clienteFeign;
+    private ProductoFeign productoFeign;
 
     @Override
     public List<Pedido> list() {
@@ -42,6 +43,10 @@ public class PedidoServiceImpl implements PedidoService {
         // Verifica si el Optional contiene un valor
         if (pedidoOptional.isPresent()) {
             Pedido pedido = pedidoOptional.get();
+
+            // Obtener cliente mediante el cliente Feign
+            ClienteDto clienteDto = clienteFeign.getById(pedido.getClienteId()).getBody();
+            pedido.setClienteDto(clienteDto);
 
             // Recorre los detalles del pedido solo si el pedido existe
             for (PedidoDetalle detallePedido : pedido.getPedidodetalle()) {
