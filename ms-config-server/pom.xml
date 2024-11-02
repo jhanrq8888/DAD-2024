@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.example</groupId>
-    <artifactId>ms-config-server</artifactId>
+    <artifactId>ms-cofig-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>ms-config-server</name>
-    <description>ms-config-server</description>
+    <name>ms-cofig-server</name>
+    <description>ms-cofig-server</description>
     <url/>
     <licenses>
         <license/>

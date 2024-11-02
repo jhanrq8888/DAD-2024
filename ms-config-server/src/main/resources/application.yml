@@ -11,7 +11,7 @@ spring:
           searchPaths: config-data
           #username:
           #password:
-          default-label: brayan
+          default-label: main
   security:
     user:
       name: root

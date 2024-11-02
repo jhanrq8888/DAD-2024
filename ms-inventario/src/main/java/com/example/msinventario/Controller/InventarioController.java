@@ -1,9 +1,14 @@
 package com.example.msinventario.Controller;
-
+import com.example.msinventario.dto.ErrorResponseDto;
+import com.example.msinventario.dto.ProductoDto;
+import com.example.msinventario.dto.ProveedorDto;
 import com.example.msinventario.Entity.Inventario;
-
+import com.example.msinventario.Entity.InventarioDetalle;
+import com.example.msinventario.feign.ProductoFeign;
+import com.example.msinventario.feign.ProveedorFeign;
 import com.example.msinventario.Service.InventarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,34 +22,53 @@ public class InventarioController {
     @Autowired
     private InventarioService inventarioService;
 
+    @Autowired
+    private ProductoFeign productoFeign;
+
+    @Autowired
+    private ProveedorFeign proveedorFeign;
+
     @GetMapping
-    public ResponseEntity<List<Inventario>> list() {
-        List<Inventario> inventarios = inventarioService.list();
-        return ResponseEntity.ok(inventarios);
-    }
-
-    @PostMapping
-    public ResponseEntity<Inventario> save(@RequestBody Inventario inventario) {
-        Inventario savedInventario = inventarioService.save(inventario);
-        return ResponseEntity.ok(savedInventario);
-    }
-
-    @PutMapping
-    public ResponseEntity<Inventario> update(@RequestBody Inventario inventario) {
-        Inventario updatedInventario = inventarioService.update(inventario);
-        return ResponseEntity.ok(updatedInventario);
+    public ResponseEntity<List<Inventario>> getAll() {
+        return ResponseEntity.ok(inventarioService.list());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Inventario> listById(@PathVariable Integer id) {
-        Optional<Inventario> inventario = inventarioService.findById(id);
-        return inventario.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Optional<Inventario>> getById(@PathVariable Integer id) {
+        return ResponseEntity.ok(inventarioService.findById(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<?> create(@RequestBody Inventario inventario) {
+        ProveedorDto proveedorDto = proveedorFeign.getById(inventario.getProveedorId()).getBody();
+
+        if (proveedorDto == null || proveedorDto.getId() == null) {
+            String errorMessage = "Error: Proveedor no encontrado.";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(errorMessage));
+        }
+
+        for (InventarioDetalle inventarioDetalle : inventario.getInventarioDetalle()) {
+            ProductoDto productoDto = productoFeign.getById(inventarioDetalle.getProductoId()).getBody();
+
+            if (productoDto == null || productoDto.getId() == null) {
+                String errorMessage = "Error: Producto no encontrado.";
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(errorMessage));
+            }
+        }
+
+        Inventario nuevoInventario = inventarioService.save(inventario);
+        return ResponseEntity.ok(nuevoInventario);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Inventario> update(@PathVariable Integer id, @RequestBody Inventario inventario) {
+        inventario.setId(id);
+        return ResponseEntity.ok(inventarioService.save(inventario));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Integer id) {
-        inventarioService.deleteById(id);
-        return ResponseEntity.ok("Eliminación Correcta");
+    public ResponseEntity<List<Inventario>> delete(@PathVariable Integer id) {
+        inventarioService.delete(id);
+        return ResponseEntity.ok(inventarioService.list());
     }
 }

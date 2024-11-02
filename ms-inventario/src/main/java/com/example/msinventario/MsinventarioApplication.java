@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Bean;
 
 @EnableFeignClients
 @SpringBootApplication
-public class MsinventarioApplication {
+public class    MsinventarioApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(MsinventarioApplication.class, args);

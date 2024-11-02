@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface EnvioService {
-    public List<Envio> list();
-    public Envio save(Envio Envio);
-    public Envio update(Envio Envio);
-    public Optional<Envio> findById(Integer id);
-    public void deleteById(Integer id);
+    List<Envio> list(); // Listar todos los envíos
+    Envio save(Envio envio); // Guardar un nuevo envío
+    Envio update(Envio envio); // Actualizar un envío existente
+    Optional<Envio> findById(Integer id); // Buscar un envío por ID
+    void delete(Integer id); // Eliminar un envío por ID
 }

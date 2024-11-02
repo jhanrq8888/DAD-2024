@@ -1,6 +1,6 @@
 package com.example.mspedido.entity;
 
-import com.example.mspedido.dto.Producto;
+import com.example.mspedido.dto.ProductoDto;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,7 +15,7 @@ public class PedidoDetalle {
     private Double precio;
     private Integer productoId;
     @Transient
-    private Producto producto;
+    private ProductoDto productoDto;
 
 
     public PedidoDetalle() {
