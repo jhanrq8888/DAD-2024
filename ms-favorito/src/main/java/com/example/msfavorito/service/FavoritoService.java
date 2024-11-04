@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface FavoritoService {
     public List<Favorito> list();
-    public  Favorito save(Favorito Favorito);
+    public Favorito save(Favorito Favorito);
     public Favorito update(Favorito Favorito);
     public Optional<Favorito> findById(Integer id);
     public void deleteById(Integer id);

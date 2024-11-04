@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ms-favorito-service
+    name: ms-favoritos-service
   profiles:
     active: development
   config:
