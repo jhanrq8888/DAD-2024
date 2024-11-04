@@ -4,5 +4,5 @@ spring:
   profiles:
     active: development
   config:
-    iimport: optional:configserver:http://root:123456@localhost:7080
+    import: optional:configserver:http://root:123456@localhost:7080
 
