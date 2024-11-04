@@ -6,12 +6,14 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 public class Favorito {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    private Integer clienteId; // ID del cliente que guarda el favorito
+    private LocalDateTime fechafavorito;
     private String productoId; // ID del producto que se guarda como favorito
 }

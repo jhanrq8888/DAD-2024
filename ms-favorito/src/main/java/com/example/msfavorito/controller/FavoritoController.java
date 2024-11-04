@@ -10,12 +10,10 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/favoritos")
+@RequestMapping("/favorito")
 public class FavoritoController {
-
     @Autowired
     private FavoritoService favoritoService;
-
     @GetMapping
     public ResponseEntity<List<Favorito>> list() {
         List<Favorito> favoritos = favoritoService.list();
@@ -26,6 +24,12 @@ public class FavoritoController {
     public ResponseEntity<Favorito> save(@RequestBody Favorito favorito) {
         Favorito savedFavorito = favoritoService.save(favorito);
         return ResponseEntity.ok(savedFavorito);
+    }
+
+    @PutMapping
+    public ResponseEntity<Favorito> update(@RequestBody Favorito favorito) {
+        Favorito updatedFavorito = favoritoService.update(favorito);
+        return ResponseEntity.ok(updatedFavorito);
     }
 
     @GetMapping("/{id}")

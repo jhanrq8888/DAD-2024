@@ -1,5 +1,5 @@
 server:
-  port: 8092
+  port: 8093
 springdoc:
   api-docs:
     enabled: true
@@ -13,7 +13,7 @@ spring:
     show-sql: true
   datasource:
     driverClassName: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/ms_favorito
+    url: jdbc:mysql://localhost:3306/ms_favoritos
     username: root
     password:
 eureka:
@@ -21,4 +21,4 @@ eureka:
     serviceUrl:
       defaultZone: http://localhost:8090/eureka
   instance:
-    hostname: localhost
+    hostname: localhost3

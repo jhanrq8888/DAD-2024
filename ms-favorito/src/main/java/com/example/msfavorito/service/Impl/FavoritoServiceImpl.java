@@ -1,4 +1,4 @@
-package com.example.msfavorito.service.Impl;
+package com.example.msfavorito.service.impl;
 
 import com.example.msfavorito.entity.Favorito;
 import com.example.msfavorito.repository.FavoritoRepository;
