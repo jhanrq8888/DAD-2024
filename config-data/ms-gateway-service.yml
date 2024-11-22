@@ -1,6 +1,6 @@
 server:
-  # port: 8085  # Se podría especificar un puerto fijo aquí, pero está comentado.
-  port: ${PORT:${SERVER_PORT:0}}
+  port: 8085  # Se podría especificar un puerto fijo aquí, pero está comentado.
+  # port: ${PORT:${SERVER_PORT:0}}
   # El puerto del servidor se asigna dinámicamente a partir de las variables de entorno. Si no están definidas, será 0 (puerto aleatorio).
 
 eureka:
