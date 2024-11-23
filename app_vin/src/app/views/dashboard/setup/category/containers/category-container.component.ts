@@ -125,20 +125,17 @@ export class CategoryContainerComponent implements OnInit {
     }
 
     // Eliminar categoría
-    public eventDelete(idCategory: number): void {
-        this._confirmDialogService.confirmDelete({
-            message: '¿Seguro que deseas eliminar esta categoría?',
-        }).then(() => {
-            this._categoryService.delete$(idCategory).pipe(
-                take(1),
-                catchError((error) => {
-                    console.error('Error al eliminar categoría:', error);
-                    this.error = 'No se pudo eliminar la categoría. Intente nuevamente.';
-                    return of(null);
-                })
-            ).subscribe((response) => {
+    public eventDelete(idCategory: number) {
+        this._confirmDialogService.confirmDelete(
+            {
+                // title: 'Confirmación Personalizada',
+                // message: `¿Quieres proceder con esta acción ${}?`,
+            }
+        ).then(() => {
+            this._categoryService.delete$(idCategory).subscribe((response) => {
                 if (response) {
-                    this.categories = this.categories.filter(c => c.id !== idCategory); // Elimina localmente
+                    // Actualizamos la lista local filtrando el elemento eliminado
+                    this.categories = this.categories.filter(category => category.id !== idCategory);
                 }
             });
         }).catch(() => {
