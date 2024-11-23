@@ -9,7 +9,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Category } from '../models/category';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { catchError, of, take } from 'rxjs'; // Import catchError and of
+import { catchError, of, take } from 'rxjs';
 
 @Component({
     selector: 'app-categories-container',
@@ -41,12 +41,11 @@ import { catchError, of, take } from 'rxjs'; // Import catchError and of
 export class CategoryContainerComponent implements OnInit {
     public error: string = ''; // To store any error message
     public categories: Category[] = [];
-    public category: Category = new Category();
 
     constructor(
         private _categoryService: CategoryService,
         private _confirmDialogService: ConfirmDialogService,
-        private _matDialog: MatDialog,
+        private _matDialog: MatDialog
     ) {}
 
     ngOnInit(): void {
@@ -56,10 +55,11 @@ export class CategoryContainerComponent implements OnInit {
     // Obtener todas las categorías
     getCategories(): void {
         this._categoryService.getAll$().pipe(
-            take(1),  // Automatically unsubscribes after one emission
+            take(1),
             catchError((error) => {
-                this.error = 'Failed to load categories. Please try again later.'; // Set a user-friendly error message
-                return of([]); // Return an empty array to avoid further errors
+                console.error('Error al cargar categorías:', error);
+                this.error = 'No se pudieron cargar las categorías. Intente nuevamente.';
+                return of([]); // Retorna lista vacía en caso de error
             })
         ).subscribe((response) => {
             this.categories = response;
@@ -71,70 +71,55 @@ export class CategoryContainerComponent implements OnInit {
         if ($event) {
             const categoryForm = this._matDialog.open(CategoryNewComponent);
             categoryForm.componentInstance.title = 'Nueva Categoría';
+
             categoryForm.afterClosed().subscribe((result: Category) => {
                 if (result) {
-                    this.saveCategory(result);
+                    this._categoryService.add$(result).pipe(
+                        take(1),
+                        catchError((error) => {
+                            console.error('Error al guardar categoría:', error);
+                            this.error = 'No se pudo guardar la categoría. Intente nuevamente.';
+                            return of(null);
+                        })
+                    ).subscribe((response) => {
+                        if (response) {
+                            this.categories.push(response); // Agrega a la lista local
+                        }
+                    });
                 }
             });
         }
-    }
-
-    // Guardar una nueva categoría
-    saveCategory(data: Category): void {
-        this._categoryService.add$(data).pipe(
-            take(1),  // Automatically unsubscribes after one emission
-            catchError((error) => {
-                this.error = 'Failed to save category. Please try again later.';
-                return of(null); // Return null to prevent further errors
-            })
-        ).subscribe((response) => {
-            if (response) {
-                this.getCategories(); // Actualizar la lista de categorías después de agregar
-            }
-        });
     }
 
     // Abrir modal para editar una categoría
     eventEdit(idCategory: number): void {
-        this._categoryService.getById$(idCategory).pipe(
-            take(1),  // Automatically unsubscribes after one emission
-            catchError((error) => {
-                this.error = 'Failed to load category for editing.';
-                return of(null); // Return null in case of an error
-            })
-        ).subscribe((response) => {
-            if (response) {
-                this.category = response;
-                this.openModalEdit(this.category);
-            }
-        });
-    }
-
-    // Abrir el modal de edición
-    openModalEdit(data: Category): void {
-        if (data) {
-            const categoryForm = this._matDialog.open(CategoryEditComponent);
-            categoryForm.componentInstance.title = `Editar <b>${data.franchise || data.id}</b>`;
-            categoryForm.componentInstance.category = { ...data }; // Hacer una copia de los datos
-            categoryForm.afterClosed().subscribe((result: Category) => {
-                if (result) {
-                    this.editCategory(data.id, result);
-                }
-            });
+        const categoryToEdit = this.categories.find(c => c.id === idCategory);
+        if (!categoryToEdit) {
+            this.error = 'Categoría no encontrada para edición.';
+            return;
         }
-    }
 
-    // Editar categoría
-    editCategory(idCategory: number, data: Category): void {
-        this._categoryService.update$(idCategory, data).pipe(
-            take(1),  // Automatically unsubscribes after one emission
-            catchError((error) => {
-                this.error = 'Failed to edit category. Please try again later.';
-                return of(null); // Return null to prevent further errors
-            })
-        ).subscribe((response) => {
-            if (response) {
-                this.getCategories(); // Actualizar la lista de categorías después de editar
+        const categoryForm = this._matDialog.open(CategoryEditComponent);
+        categoryForm.componentInstance.title = `Editar <b>${categoryToEdit.franchise || categoryToEdit.id}</b>`;
+        categoryForm.componentInstance.category = { ...categoryToEdit }; // Copia para evitar mutación
+
+        categoryForm.afterClosed().subscribe((result: Category) => {
+            if (result) {
+                this._categoryService.update$(idCategory, result).pipe(
+                    take(1),
+                    catchError((error) => {
+                        console.error('Error al editar categoría:', error);
+                        this.error = 'No se pudo editar la categoría. Intente nuevamente.';
+                        return of(null);
+                    })
+                ).subscribe((response) => {
+                    if (response) {
+                        const index = this.categories.findIndex(c => c.id === idCategory);
+                        if (index !== -1) {
+                            this.categories[index] = response; // Actualiza el elemento localmente
+                        }
+                    }
+                });
             }
         });
     }
@@ -145,18 +130,19 @@ export class CategoryContainerComponent implements OnInit {
             message: '¿Seguro que deseas eliminar esta categoría?',
         }).then(() => {
             this._categoryService.delete$(idCategory).pipe(
-                take(1),  // Automatically unsubscribes after one emission
+                take(1),
                 catchError((error) => {
-                    this.error = 'Failed to delete category. Please try again later.';
-                    return of(null); // Return null to prevent further errors
+                    console.error('Error al eliminar categoría:', error);
+                    this.error = 'No se pudo eliminar la categoría. Intente nuevamente.';
+                    return of(null);
                 })
             ).subscribe((response) => {
                 if (response) {
-                    this.getCategories(); // Recargar las categorías después de eliminar
+                    this.categories = this.categories.filter(c => c.id !== idCategory); // Elimina localmente
                 }
             });
         }).catch(() => {
-            // Manejo de cancelación de la eliminación
+            // Usuario canceló la acción
         });
     }
 }
