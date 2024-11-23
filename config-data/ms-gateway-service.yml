@@ -35,8 +35,8 @@ spring:
           uri: lb://ms-catalogo-service  # Ruta para el servicio ms-catalogo-service
           predicates:
             - Path=/category/**  # Rutas que comienzan con `/category/` se enrutan a este servicio.
-          filters:
-            - AuthFilter  # Filtro de autorización (asumiblemente personalizado).
+          #filters:
+           # - AuthFilter  # Filtro de autorización (asumiblemente personalizado).
 
         - id: ms-auth-service
           uri: lb://ms-auth-service  # Ruta para el servicio de autenticación

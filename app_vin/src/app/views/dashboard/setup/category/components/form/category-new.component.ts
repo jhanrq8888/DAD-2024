@@ -1,19 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {
-    FormControl,
-    FormGroup,
-    FormsModule,
-    ReactiveFormsModule,
-    Validators,
-} from '@angular/forms';
-
-import { abcForms } from '../../../../../../../environments/generals';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-categories-new',
@@ -35,31 +28,44 @@ import { MatInputModule } from '@angular/material/input';
                 <button mat-icon-button (click)="cancelForm()" [tabIndex]="-1">
                     <mat-icon
                         class="text-current"
-                        [svgIcon]="'heroicons_outline:x-mark'"
-                    ></mat-icon>
+                        [svgIcon]="'heroicons_outline:x-mark'"></mat-icon>
                 </button>
             </div>
-
 
             <!-- Compose form -->
             <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="categoryForm">
                 <mat-form-field>
-                    <mat-label>Nombre</mat-label>
-                    <input matInput formControlName="name" />
+                    <mat-label>Franquicia</mat-label>
+                    <input matInput formControlName="franchise" />
+                    <mat-error *ngIf="categoryForm.get('franchise')?.hasError('required')">
+                        La franquicia es obligatoria.
+                    </mat-error>
                 </mat-form-field>
+
                 <mat-form-field>
-                    <mat-label>Descripción</mat-label>
-                    <input matInput formControlName="description" />
+                    <mat-label>Tipo</mat-label>
+                    <input matInput formControlName="type" />
+                    <mat-error *ngIf="categoryForm.get('type')?.hasError('required')">
+                        El tipo es obligatorio.
+                    </mat-error>
                 </mat-form-field>
+
                 <mat-form-field>
-                    <mat-label>Código</mat-label>
-                    <input matInput formControlName="code" />
+                    <mat-label>Popularidad</mat-label>
+                    <input matInput formControlName="popularity" type="number" />
+                    <mat-error *ngIf="categoryForm.get('popularity')?.hasError('required')">
+                        La popularidad es obligatoria.
+                    </mat-error>
+                    <mat-error *ngIf="categoryForm.get('popularity')?.hasError('min')">
+                        La popularidad debe ser un número positivo.
+                    </mat-error>
                 </mat-form-field>
+
                 <!-- Actions -->
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-4 sm:mt-6">
                     <div class="flex space-x-2 items-center mt-4 sm:mt-0 ml-auto">
                         <button mat-stroked-button [color]="'warn'" (click)="cancelForm()">Cancelar</button>
-                        <button mat-stroked-button [color]="'primary'" (click)="saveForm()">
+                        <button mat-stroked-button [color]="'primary'" (click)="saveForm()" [disabled]="categoryForm.invalid">
                             Guardar
                         </button>
                     </div>
@@ -69,28 +75,29 @@ import { MatInputModule } from '@angular/material/input';
     `,
 })
 export class CategoryNewComponent implements OnInit {
-    @Input() title: string = '';
-    abcForms: any;
-    categoryForm = new FormGroup({
-
-        name: new FormControl('', [Validators.required]),
-        description: new FormControl('', [Validators.required]),
-        code: new FormControl('', [Validators.required]),
-    });
+    @Input() title: string = ''; // Título que se pasará al componente
+    categoryForm: FormGroup;
 
     constructor(private _matDialog: MatDialogRef<CategoryNewComponent>) {}
 
-    ngOnInit() {
-        this.abcForms = abcForms;
+    ngOnInit(): void {
+        // Inicializa el formulario con las validaciones
+        this.categoryForm = new FormGroup({
+            franchise: new FormControl('', [Validators.required]), // Validación para franquicia
+            type: new FormControl('', [Validators.required]), // Validación para tipo
+            popularity: new FormControl('', [Validators.required, Validators.min(0)]), // Validación para popularidad
+        });
     }
 
+    // Método para guardar los datos del formulario
     public saveForm(): void {
         if (this.categoryForm.valid) {
-            this._matDialog.close(this.categoryForm.value);
+            this._matDialog.close(this.categoryForm.value); // Cierra el diálogo y pasa los datos del formulario
         }
     }
 
+    // Método para cancelar la acción y cerrar el diálogo sin cambios
     public cancelForm(): void {
-        this._matDialog.close('');
+        this._matDialog.close(''); // Cierra el diálogo sin realizar ninguna acción
     }
 }
