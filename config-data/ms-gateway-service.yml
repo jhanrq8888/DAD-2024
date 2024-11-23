@@ -1,19 +1,16 @@
 server:
-  port: 8085  # Se podría especificar un puerto fijo aquí, pero está comentado.
-  # port: ${PORT:${SERVER_PORT:0}}
-  # El puerto del servidor se asigna dinámicamente a partir de las variables de entorno. Si no están definidas, será 0 (puerto aleatorio).
+  port: 8085
+
 
 eureka:
   client:
     serviceUrl:
-      # defaultZone: http://localhost:8090/eureka  # Se ha comentado para usar la variable de entorno.
+      #defaultZone: http://localhost:8090/eureka
       defaultZone: ${EUREKA_URI:http://localhost:8090/eureka}
-      # La URL de Eureka se toma de la variable de entorno `EUREKA_URI`, y si no está definida, se utiliza `localhost:8090/eureka`.
-
   instance:
-    # hostname: localhost  # La configuración del hostname se ha comentado.
+    #hostname: localhost
     instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-    # Genera dinámicamente un `instance-id` para registrar la instancia en Eureka, usando el nombre de la aplicación y un valor aleatorio.
+
 
 spring:
   cloud:
