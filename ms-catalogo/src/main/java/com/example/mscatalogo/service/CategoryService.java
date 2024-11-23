@@ -5,9 +5,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CategoryService {
-    public List<Category> list();
-    public Category save(Category category);
-    public Category update(Category category);
-    public Optional<Category> findById(Integer id);
-    public void deleteById(Integer id);
+    List<Category> list();  // Devuelve una lista de categorías
+
+    Category save(Category category);  // Guarda una nueva categoría
+
+    Category update(Category category);  // Actualiza una categoría existente
+
+    Optional<Category> findById(Integer id);  // Busca una categoría por su ID
+
+    void deleteById(Integer id);  // Elimina una categoría por su ID
 }

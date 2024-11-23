@@ -28,8 +28,15 @@ public class CategoryController {
         return ResponseEntity.ok(savedCategory);
     }
 
-    @PutMapping
-    public ResponseEntity<Category> update(@RequestBody Category category) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Category> update(@PathVariable Integer id, @RequestBody Category category) {
+        Optional<Category> existingCategory = categoryService.findById(id);
+
+        if (existingCategory.isEmpty()) {
+            return ResponseEntity.notFound().build();  // Retorna 404 si la categoría no existe.
+        }
+
+        category.setId(id);  // Asegúrate de que el ID de la categoría a actualizar sea el correcto.
         Category updatedCategory = categoryService.update(category);
         return ResponseEntity.ok(updatedCategory);
     }
@@ -38,11 +45,17 @@ public class CategoryController {
     public ResponseEntity<Category> listById(@PathVariable Integer id) {
         Optional<Category> category = categoryService.findById(id);
         return category.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());  // Retorna 404 si la categoría no existe.
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
+        Optional<Category> category = categoryService.findById(id);
+
+        if (category.isEmpty()) {
+            return ResponseEntity.notFound().build();  // Retorna 404 si la categoría no existe.
+        }
+
         categoryService.deleteById(id);
         return ResponseEntity.ok("Eliminación Correcta");
     }

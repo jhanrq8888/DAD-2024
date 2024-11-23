@@ -27,6 +27,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category update(Category category) {
+        // Verificación para asegurarse de que la categoría existe antes de actualizarla
+        if (!categoryRepository.existsById(category.getId())) {
+            throw new RuntimeException("Category not found");
+        }
         return categoryRepository.save(category);
     }
 
@@ -37,6 +41,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public void deleteById(Integer id) {
+        // Aquí también se podría verificar si existe antes de borrar
+        if (!categoryRepository.existsById(id)) {
+            throw new RuntimeException("Category not found");
+        }
         categoryRepository.deleteById(id);
     }
 }
