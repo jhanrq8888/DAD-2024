@@ -8,4 +8,5 @@ public class ProductoDto {
     private String nombre; // Nombre del producto
     private String modelo; // Modelo del producto
     private Integer codigo; // Código del producto (puede ser un código SKU o similar)
+    private byte[] imagen;
 }

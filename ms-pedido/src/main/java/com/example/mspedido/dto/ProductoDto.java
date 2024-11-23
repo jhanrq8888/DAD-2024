@@ -9,5 +9,5 @@ ProductoDto {
     private String nombre;
     private String modelo;
     private Integer codigo;
-
+    private byte[] imagen;
 }

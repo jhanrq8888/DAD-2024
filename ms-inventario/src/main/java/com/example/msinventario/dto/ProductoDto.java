@@ -12,4 +12,6 @@ public class ProductoDto {
 
     private Integer codigo; // Código del producto, puede ser un SKU o un código interno
 
+    private byte[] imagen;
+
 }
