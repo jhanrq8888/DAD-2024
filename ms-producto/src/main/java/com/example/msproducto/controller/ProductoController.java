@@ -7,11 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/product")
@@ -35,52 +33,36 @@ public class ProductoController {
 
         if (imagen != null && !imagen.isEmpty()) {
             try {
-                String imagenPath = saveImage(imagen);
-                producto.setImagenPath(imagenPath);
+                byte[] imagenBytes = imagen.getBytes();  // Convertir la imagen a bytes
+                producto.setImagen(imagenBytes);         // Establecer los bytes de la imagen en el producto
             } catch (IOException e) {
-                return ResponseEntity.internalServerError().build();
+                return ResponseEntity.internalServerError().build();  // Manejar error de lectura de la imagen
             }
         }
 
-        Producto savedProduct = productService.save(producto);
-        return ResponseEntity.ok(savedProduct);
-    }
-
-    // Subir y guardar la imagen
-    private String saveImage(MultipartFile imagen) throws IOException {
-        String directory = "images/"; // Carpeta donde se guardarán las imágenes
-        String fileName = UUID.randomUUID() + "_" + imagen.getOriginalFilename();
-        File imageFile = new File(directory);
-
-        if (!imageFile.exists()) {
-            imageFile.mkdirs(); // Crear directorio si no existe
-        }
-
-        File file = new File(directory + fileName);
-        imagen.transferTo(file);
-
-        return file.getAbsolutePath(); // Retornar la ruta de la imagen
+        Producto savedProduct = productService.save(producto);  // Guardar el producto en la base de datos
+        return ResponseEntity.ok(savedProduct);  // Devolver el producto guardado
     }
 
     // Actualizar un producto existente
     @PutMapping
     public ResponseEntity<Producto> update(@RequestBody Producto product) {
-        Producto updatedProduct = productService.update(product);
-        return ResponseEntity.ok(updatedProduct);
+        Producto updatedProduct = productService.update(product);  // Actualizar el producto
+        return ResponseEntity.ok(updatedProduct);  // Devolver el producto actualizado
     }
 
     // Obtener un producto por ID
     @GetMapping("/{id}")
     public ResponseEntity<Producto> listById(@PathVariable Integer id) {
-        Optional<Producto> product = productService.findById(id);
-        return product.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+        Optional<Producto> product = productService.findById(id);  // Buscar el producto por ID
+        return product.map(ResponseEntity::ok)  // Si el producto existe, devolverlo con estado 200 OK
+                .orElseGet(() -> ResponseEntity.notFound().build());  // Si no existe, devolver 404 Not Found
     }
 
     // Eliminar un producto por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteById(@PathVariable Integer id) {
-        productService.deleteById(id);
-        return ResponseEntity.ok("Eliminación Correcta");
+        productService.deleteById(id);  // Eliminar el producto por ID
+        return ResponseEntity.ok("Eliminación Correcta");  // Devolver mensaje de éxito
     }
 }

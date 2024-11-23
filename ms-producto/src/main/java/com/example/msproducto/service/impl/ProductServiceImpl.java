@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -38,14 +37,15 @@ public class ProductServiceImpl implements ProductService {
     }
 
     // Guardar producto con imagen
+    @Override
     public Producto saveWithImage(Producto product, MultipartFile imagen) throws IOException {
         if (product.getCodigo() == null) {
             product.setCodigo(generateCodigo());
         }
 
         if (imagen != null && !imagen.isEmpty()) {
-            String imagePath = saveImage(imagen);
-            product.setImagenPath(imagePath);
+            byte[] imagenBytes = imagen.getBytes(); // Convertir la imagen a bytes
+            product.setImagen(imagenBytes);         // Establecer los bytes de la imagen en el producto
         }
 
         return productRepository.save(product);
@@ -76,21 +76,5 @@ public class ProductServiceImpl implements ProductService {
             codigo = 1000 + random.nextInt(9000); // Genera uno nuevo si ya existe
         }
         return codigo;
-    }
-
-    // Subir imagen al servidor
-    private String saveImage(MultipartFile imagen) throws IOException {
-        String directory = "images/"; // Directorio para almacenar imágenes
-        String fileName = UUID.randomUUID() + "_" + imagen.getOriginalFilename();
-        File dir = new File(directory);
-
-        if (!dir.exists()) {
-            dir.mkdirs(); // Crea el directorio si no existe
-        }
-
-        File file = new File(directory + fileName);
-        imagen.transferTo(file); // Guarda la imagen en el servidor
-
-        return file.getAbsolutePath(); // Retorna la ruta del archivo guardado
     }
 }

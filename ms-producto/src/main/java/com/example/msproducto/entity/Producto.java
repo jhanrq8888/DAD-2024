@@ -1,13 +1,13 @@
 package com.example.msproducto.entity;
 
-import jakarta.persistence.Entity;            // Importa la anotación para definir una entidad JPA
-import jakarta.persistence.GeneratedValue;   // Importa la anotación para la generación automática de IDs
-import jakarta.persistence.GenerationType;   // Importa la enumeración para especificar la estrategia de generación de IDs
-import jakarta.persistence.Id;               // Importa la anotación para definir la clave primaria
-import lombok.Data;                        // Importa la anotación de Lombok para generar getters, setters, etc.
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.Data;
 
-@Data                                      // Genera automáticamente getters, setters, toString, equals, y hashCode
-@Entity                                    // Indica que esta clase es una entidad JPA que se mapeará a una tabla en la base de datos
+@Data
+@Entity
 public class Producto {
 
     @Id
@@ -18,5 +18,6 @@ public class Producto {
     private String modelo;
     private Integer codigo;
 
-    private String imagenPath; // Nueva propiedad para la ruta de la imagen
+    // Agregar campo para almacenar la imagen
+    private byte[] imagen;  // Almacenar imagen como un array de bytes
 }
