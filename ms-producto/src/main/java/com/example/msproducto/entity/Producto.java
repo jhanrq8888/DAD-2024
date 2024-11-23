@@ -10,13 +10,13 @@ import lombok.Data;                        // Importa la anotación de Lombok pa
 @Entity                                    // Indica que esta clase es una entidad JPA que se mapeará a una tabla en la base de datos
 public class Producto {
 
-    @Id                                     // Define este campo como la clave primaria
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Especifica que el valor del ID se generará automáticamente
-    private Integer id;                     // ID único del producto
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
 
-    private String nombre;                  // Nombre del producto
+    private String nombre;
+    private String modelo;
+    private Integer codigo;
 
-    private String modelo;                  // Modelo del producto
-
-    private Integer codigo;                 // Código del producto (puede ser un SKU o similar)
+    private String imagenPath; // Nueva propiedad para la ruta de la imagen
 }

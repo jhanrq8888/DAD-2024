@@ -1,8 +1,10 @@
 package com.example.msproducto.service;
 
-import com.example.msproducto.entity.Producto;  // Importa la entidad Producto
-import java.util.List;                        // Importa la clase List para manejar colecciones
-import java.util.Optional;                    // Importa la clase Optional para manejar valores que pueden estar ausentes
+import com.example.msproducto.entity.Producto;
+import org.springframework.web.multipart.MultipartFile; // Importa la clase MultipartFile para manejar archivos
+import java.io.IOException;                         // Importa IOException para manejar errores de archivo
+import java.util.List;
+import java.util.Optional;
 
 // Interfaz del servicio para manejar las operaciones CRUD relacionadas con los productos
 public interface ProductService {
@@ -12,6 +14,9 @@ public interface ProductService {
 
     // Método para guardar un nuevo producto
     public Producto save(Producto product);
+
+    // Método para guardar un producto con una imagen asociada
+    public Producto saveWithImage(Producto product, MultipartFile imagen) throws IOException;
 
     // Método para actualizar un producto existente
     public Producto update(Producto product);

@@ -1,47 +1,96 @@
 package com.example.msproducto.service.impl;
 
-import com.example.msproducto.entity.Producto;                // Importa la entidad Producto
-import com.example.msproducto.repository.ProductoRepository;  // Importa el repositorio de productos
-import com.example.msproducto.service.ProductService;         // Importa la interfaz del servicio de productos
-import org.springframework.beans.factory.annotation.Autowired;   // Importa la anotación para inyección de dependencias
-import org.springframework.stereotype.Service;                  // Importa la anotación para definir esta clase como un servicio
+import com.example.msproducto.entity.Producto;                // Entidad Producto
+import com.example.msproducto.repository.ProductoRepository;  // Repositorio Producto
+import com.example.msproducto.service.ProductService;         // Servicio Producto
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;                                        // Importa la clase List para manejar colecciones
-import java.util.Optional;                                    // Importa la clase Optional para manejar valores que pueden estar ausentes
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 
-@Service  // Define esta clase como un servicio gestionado por Spring
+@Service
 public class ProductServiceImpl implements ProductService {
 
-    @Autowired  // Inyección de dependencias para utilizar el repositorio de productos
+    @Autowired
     private ProductoRepository productRepository;
 
-    // Método para listar todos los productos
+    private final Random random = new Random(); // Generador para códigos automáticos
+
+    // Listar todos los productos
     @Override
     public List<Producto> list() {
-        return productRepository.findAll();  // Llama al repositorio para obtener todos los productos
+        return productRepository.findAll();
     }
 
-    // Método para guardar un nuevo producto
+    // Guardar un nuevo producto (con lógica de código automático y sin imagen)
     @Override
     public Producto save(Producto product) {
-        return productRepository.save(product);  // Llama al repositorio para guardar el producto
+        if (product.getCodigo() == null) {
+            product.setCodigo(generateCodigo());
+        }
+        return productRepository.save(product);
     }
 
-    // Método para actualizar un producto existente
+    // Guardar producto con imagen
+    public Producto saveWithImage(Producto product, MultipartFile imagen) throws IOException {
+        if (product.getCodigo() == null) {
+            product.setCodigo(generateCodigo());
+        }
+
+        if (imagen != null && !imagen.isEmpty()) {
+            String imagePath = saveImage(imagen);
+            product.setImagenPath(imagePath);
+        }
+
+        return productRepository.save(product);
+    }
+
+    // Actualizar un producto existente
     @Override
     public Producto update(Producto product) {
-        return productRepository.save(product);  // Llama al repositorio para actualizar el producto
+        return productRepository.save(product);
     }
 
-    // Método para buscar un producto por ID
+    // Buscar producto por ID
     @Override
     public Optional<Producto> findById(Integer id) {
-        return productRepository.findById(id);  // Llama al repositorio para buscar el producto por su ID
+        return productRepository.findById(id);
     }
 
-    // Método para eliminar un producto por ID
+    // Eliminar producto por ID
     @Override
     public void deleteById(Integer id) {
-        productRepository.deleteById(id);  // Llama al repositorio para eliminar el producto por su ID
+        productRepository.deleteById(id);
+    }
+
+    // Generar código único para el producto
+    private Integer generateCodigo() {
+        int codigo = 1000 + random.nextInt(9000); // Genera un número entre 1000 y 9999
+        while (productRepository.findByCodigo(codigo).isPresent()) {
+            codigo = 1000 + random.nextInt(9000); // Genera uno nuevo si ya existe
+        }
+        return codigo;
+    }
+
+    // Subir imagen al servidor
+    private String saveImage(MultipartFile imagen) throws IOException {
+        String directory = "images/"; // Directorio para almacenar imágenes
+        String fileName = UUID.randomUUID() + "_" + imagen.getOriginalFilename();
+        File dir = new File(directory);
+
+        if (!dir.exists()) {
+            dir.mkdirs(); // Crea el directorio si no existe
+        }
+
+        File file = new File(directory + fileName);
+        imagen.transferTo(file); // Guarda la imagen en el servidor
+
+        return file.getAbsolutePath(); // Retorna la ruta del archivo guardado
     }
 }
