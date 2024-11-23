@@ -49,7 +49,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteById(@PathVariable Integer id) {
         Optional<Category> category = categoryService.findById(id);
 
         if (category.isEmpty()) {
@@ -57,6 +57,6 @@ public class CategoryController {
         }
 
         categoryService.deleteById(id);
-        return ResponseEntity.ok("Eliminación Correcta");
+        return ResponseEntity.noContent().build(); // Retorna 204 No Content si la eliminación es exitosa
     }
 }
