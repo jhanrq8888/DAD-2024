@@ -28,7 +28,7 @@ public class ProductoController {
     // Crear un nuevo producto con imagen
     @PostMapping
     public ResponseEntity<Producto> save(
-            @RequestBody Producto producto,  // Datos del producto
+            @RequestPart(value = "producto") Producto producto,  // Datos del producto
             @RequestPart(value = "imagen", required = false) MultipartFile imagen) {  // Imagen del producto
 
         Producto savedProduct;
@@ -46,12 +46,13 @@ public class ProductoController {
         }
     }
 
+
     // Actualizar un producto existente
     @PutMapping("/{id}")
     public ResponseEntity<Producto> update(
             @PathVariable Integer id,
-            @RequestPart("producto") Producto producto, // Cambié @RequestBody a @RequestPart para los datos del producto
-            @RequestPart(value = "imagen", required = false) MultipartFile imagen) {
+            @RequestPart(value = "producto") Producto producto, // Datos del producto
+            @RequestPart(value = "imagen", required = false) MultipartFile imagen) {  // Imagen del producto
 
         // Buscar el producto por ID
         Optional<Producto> existingProduct = productService.findById(id);
@@ -74,6 +75,7 @@ public class ProductoController {
             return ResponseEntity.internalServerError().build();  // Manejar error de lectura de la imagen
         }
     }
+
 
     // Obtener un producto por ID
     @GetMapping("/{id}")
