@@ -45,9 +45,22 @@ public class ProductoController {
     }
 
     // Actualizar un producto existente
-    @PutMapping
-    public ResponseEntity<Producto> update(@RequestBody Producto product) {
-        Producto updatedProduct = productService.update(product);  // Actualizar el producto
+    @PutMapping("/{id}")
+    public ResponseEntity<Producto> update(
+            @PathVariable Integer id,
+            @RequestPart("producto") Producto producto,
+            @RequestPart(value = "imagen", required = false) MultipartFile imagen) {
+
+        if (imagen != null && !imagen.isEmpty()) {
+            try {
+                byte[] imagenBytes = imagen.getBytes();  // Convertir la imagen a bytes
+                producto.setImagen(imagenBytes);         // Establecer los bytes de la imagen en el producto
+            } catch (IOException e) {
+                return ResponseEntity.internalServerError().build();  // Manejar error de lectura de la imagen
+            }
+        }
+
+        Producto updatedProduct = productService.update( producto);  // Asegúrate de que el service pueda manejar la actualización con ID
         return ResponseEntity.ok(updatedProduct);  // Devolver el producto actualizado
     }
 

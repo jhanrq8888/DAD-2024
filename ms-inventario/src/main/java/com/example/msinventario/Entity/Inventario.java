@@ -12,24 +12,24 @@ import java.util.List; // Importa la clase List para manejar listas
 public class Inventario {
     @Id // Indica que este campo es la clave primaria
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Genera automáticamente el valor de ID
-    private Integer id; // ID único del inventario
+        private Integer id; // ID único del inventario
 
-    private String nombre; // Nombre del inventario
+        private String nombre; // Nombre del inventario
 
-    private String descripcion; // Descripción del inventario
+        private String descripcion; // Descripción del inventario
 
-    private Double stock; // Cantidad de productos en stock
+        private Double stock; // Cantidad de productos en stock
 
-    private String modelo; // Modelo del producto
+        private String modelo; // Modelo del producto
 
-    private Integer codigo; // Código único del producto
+        private Integer codigo; // Código único del producto
 
-    private Integer proveedorId; // ID del proveedor relacionado
+        private Integer proveedorId; // ID del proveedor relacionado
 
-    // Constructor por defecto que inicializa stock a 0
-    public Inventario() {
-        this.stock = 0.0; // Inicializa el stock a 0.0
-    }
+        // Constructor por defecto que inicializa stock a 0
+        public Inventario() {
+            this.stock = 0.0; // Inicializa el stock a 0.0
+        }
 
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"}) // Ignora propiedades innecesarias durante la serialización
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL) // Define una relación uno a muchos
