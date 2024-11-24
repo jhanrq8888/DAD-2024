@@ -35,6 +35,8 @@ public class ProductServiceImpl implements ProductService {
         // Convertir la imagen a bytes y asignarla al producto
         byte[] imagenBytes = imagen.getBytes();
         product.setImagen(imagenBytes);
+
+        // Guardar el producto con la imagen en la base de datos
         return productoRepository.save(product);
     }
 

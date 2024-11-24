@@ -34,8 +34,10 @@ public class ProductoController {
         Producto savedProduct;
         try {
             if (imagen != null && !imagen.isEmpty()) {
-                // Guardar el producto junto con la imagen
-                savedProduct = productService.saveWithImage(producto, imagen);
+                // Convertir la imagen a un array de bytes y guardarlo en el producto
+                byte[] imagenBytes = imagen.getBytes();
+                producto.setImagen(imagenBytes); // Establecer la imagen como un array de bytes
+                savedProduct = productService.saveWithImage(producto, imagen); // Guardar el producto con la imagen
             } else {
                 // Si no se proporciona imagen, solo guardar el producto
                 savedProduct = productService.save(producto);
