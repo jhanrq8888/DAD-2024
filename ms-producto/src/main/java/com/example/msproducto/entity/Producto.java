@@ -18,6 +18,6 @@ public class Producto {
     private String modelo;
     private Integer codigo;
 
-    // Agregar campo para almacenar la imagen
-    private byte[] imagen;  // Almacenar imagen como un array de bytes
+    // Almacenar imagen como un array de bytes
+    private byte[] imagen;  // La imagen se almacena como un arreglo de bytes
 }

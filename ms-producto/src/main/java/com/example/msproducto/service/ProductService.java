@@ -1,8 +1,8 @@
 package com.example.msproducto.service;
 
 import com.example.msproducto.entity.Producto;
-import org.springframework.web.multipart.MultipartFile; // Importa la clase MultipartFile para manejar archivos
-import java.io.IOException;                         // Importa IOException para manejar errores de archivo
+import org.springframework.web.multipart.MultipartFile; // Para manejar archivos
+import java.io.IOException;                         // Para manejar errores de archivo
 import java.util.List;
 import java.util.Optional;
 
@@ -12,12 +12,6 @@ public interface ProductService {
     // Método para listar todos los productos
     List<Producto> list();
 
-    // Método para guardar un nuevo producto sin imagen
-    Producto save(Producto product);
-
-    // Método para guardar un producto con una imagen asociada
-    Producto saveWithImage(Producto product, MultipartFile imagen) throws IOException;
-
     // Método para actualizar un producto existente
     Producto update(Producto product);
 
@@ -26,4 +20,8 @@ public interface ProductService {
 
     // Método para eliminar un producto por su ID
     void deleteById(Integer id);
+    Producto save(Producto product);
+
+    // Este método guarda el producto con imagen
+    Producto saveWithImage(Producto product, MultipartFile imagen) throws IOException;
 }

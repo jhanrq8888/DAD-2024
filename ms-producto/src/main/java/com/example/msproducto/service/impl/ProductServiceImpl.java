@@ -27,34 +27,40 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findAll();
     }
 
-    // Guardar un nuevo producto (con lógica de código automático y sin imagen)
+    // Guardar un nuevo producto (con imagen o sin imagen)
     @Override
     public Producto save(Producto product) {
+        // Solo asignamos el código si es necesario
         if (product.getCodigo() == null) {
             product.setCodigo(generateCodigo());
         }
-        return productRepository.save(product);
+        return productRepository.save(product); // Guardamos el producto sin imagen
     }
 
-    // Guardar producto con imagen
+    // Guardar un nuevo producto con imagen
     @Override
     public Producto saveWithImage(Producto product, MultipartFile imagen) throws IOException {
+        // Generación del código único si es necesario
         if (product.getCodigo() == null) {
             product.setCodigo(generateCodigo());
         }
 
+        // Manejo de la imagen si se proporciona
         if (imagen != null && !imagen.isEmpty()) {
             byte[] imagenBytes = imagen.getBytes(); // Convertir la imagen a bytes
             product.setImagen(imagenBytes);         // Establecer los bytes de la imagen en el producto
         }
 
-        return productRepository.save(product);
+        return productRepository.save(product);  // Guardar el producto (con o sin imagen)
     }
 
     // Actualizar un producto existente
     @Override
     public Producto update(Producto product) {
-        return productRepository.save(product);
+        if (product == null || product.getId() == null) {
+            throw new IllegalArgumentException("El producto o su ID no pueden ser nulos");
+        }
+        return productRepository.save(product); // Actualizar el producto
     }
 
     // Buscar producto por ID
@@ -66,6 +72,9 @@ public class ProductServiceImpl implements ProductService {
     // Eliminar producto por ID
     @Override
     public void deleteById(Integer id) {
+        if (!productRepository.existsById(id)) {
+            throw new IllegalArgumentException("Producto no encontrado para eliminar");
+        }
         productRepository.deleteById(id);
     }
 
