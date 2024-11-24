@@ -5,9 +5,7 @@ import com.example.msproducto.repository.ProductoRepository;
 import com.example.msproducto.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,20 +21,9 @@ public class ProductServiceImpl implements ProductService {
         return productoRepository.findAll();
     }
 
-    // Guardar un producto sin imagen
+    // Guardar un producto (con o sin imagen)
     @Override
     public Producto save(Producto product) {
-        return productoRepository.save(product);
-    }
-
-    // Guardar un producto con imagen
-    @Override
-    public Producto saveWithImage(Producto product, MultipartFile imagen) throws IOException {
-        // Convertir la imagen a bytes y asignarla al producto
-        byte[] imagenBytes = imagen.getBytes();
-        product.setImagen(imagenBytes);
-
-        // Guardar el producto con la imagen en la base de datos
         return productoRepository.save(product);
     }
 
@@ -49,12 +36,19 @@ public class ProductServiceImpl implements ProductService {
     // Actualizar un producto existente
     @Override
     public Producto update(Producto product) {
-        return productoRepository.save(product);  // El método save también funciona para actualizar
+        // Asegurarse de que el producto existe antes de actualizar
+        if (!productoRepository.existsById(product.getId())) {
+            throw new RuntimeException("Producto no encontrado con ID: " + product.getId());
+        }
+        return productoRepository.save(product);
     }
 
     // Eliminar un producto por ID
     @Override
     public void deleteById(Integer id) {
+        if (!productoRepository.existsById(id)) {
+            throw new RuntimeException("Producto no encontrado con ID: " + id);
+        }
         productoRepository.deleteById(id);
     }
 }

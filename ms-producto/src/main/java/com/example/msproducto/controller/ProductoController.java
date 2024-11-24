@@ -28,23 +28,16 @@ public class ProductoController {
     // Crear un nuevo producto con imagen
     @PostMapping
     public ResponseEntity<Producto> save(
-            @RequestPart("producto") Producto producto,  // Datos del producto
-            @RequestPart(value = "imagen", required = false) MultipartFile imagen) {  // Imagen del producto
-
-        Producto savedProduct;
+            @RequestPart("producto") Producto producto,
+            @RequestPart(value = "imagen", required = false) MultipartFile imagen) {
         try {
             if (imagen != null && !imagen.isEmpty()) {
-                // Convertir la imagen a un array de bytes y guardarlo en el producto
-                byte[] imagenBytes = imagen.getBytes();
-                producto.setImagen(imagenBytes); // Establecer la imagen como un array de bytes
-                savedProduct = productService.saveWithImage(producto, imagen); // Guardar el producto con la imagen
-            } else {
-                // Si no se proporciona imagen, solo guardar el producto
-                savedProduct = productService.save(producto);
+                producto.setImagen(imagen.getBytes());
             }
-            return ResponseEntity.ok(savedProduct);  // Devolver el producto guardado
+            Producto savedProduct = productService.save(producto);
+            return ResponseEntity.ok(savedProduct);
         } catch (IOException e) {
-            return ResponseEntity.internalServerError().build();  // Manejar error de lectura de la imagen
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 
@@ -52,48 +45,40 @@ public class ProductoController {
     @PutMapping("/{id}")
     public ResponseEntity<Producto> update(
             @PathVariable Integer id,
-            @RequestPart(value = "producto") Producto producto, // Datos del producto
-            @RequestPart(value = "imagen", required = false) MultipartFile imagen) {  // Imagen del producto
-
-        // Buscar el producto por ID
+            @RequestPart("producto") Producto producto,
+            @RequestPart(value = "imagen", required = false) MultipartFile imagen) {
         Optional<Producto> existingProduct = productService.findById(id);
         if (!existingProduct.isPresent()) {
-            return ResponseEntity.notFound().build(); // Si no existe el producto, devolver 404
+            return ResponseEntity.notFound().build();
         }
 
         try {
-            // Si se proporciona una nueva imagen, se convierte en bytes y se asigna al producto
             if (imagen != null && !imagen.isEmpty()) {
-                byte[] imagenBytes = imagen.getBytes();  // Convertir la imagen a bytes
-                producto.setImagen(imagenBytes);         // Establecer los bytes de la imagen en el producto
+                producto.setImagen(imagen.getBytes());
             }
-
-            // Asegurarse de que el producto tiene el ID correcto
-            producto.setId(id);
-            Producto updatedProduct = productService.update(producto);  // Actualizar el producto
-            return ResponseEntity.ok(updatedProduct);  // Devolver el producto actualizado
+            producto.setId(id); // Asegurar que el ID sea el correcto
+            Producto updatedProduct = productService.update(producto);
+            return ResponseEntity.ok(updatedProduct);
         } catch (IOException e) {
-            return ResponseEntity.internalServerError().build();  // Manejar error de lectura de la imagen
+            return ResponseEntity.internalServerError().body(null);
         }
     }
 
     // Obtener un producto por ID
     @GetMapping("/{id}")
     public ResponseEntity<Producto> listById(@PathVariable Integer id) {
-        Optional<Producto> product = productService.findById(id);  // Buscar el producto por ID
-        return product.map(ResponseEntity::ok)  // Si el producto existe, devolverlo con estado 200 OK
-                .orElseGet(() -> ResponseEntity.notFound().build());  // Si no existe, devolver 404 Not Found
+        Optional<Producto> product = productService.findById(id);
+        return product.map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     // Eliminar un producto por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Integer id) {
-        Optional<Producto> product = productService.findById(id);
-        if (product.isPresent()) {
-            productService.deleteById(id);  // Eliminar el producto por ID
-            return ResponseEntity.noContent().build();  // Devolver estado 204 No Content en caso de éxito
-        } else {
-            return ResponseEntity.notFound().build();  // Si no se encuentra el producto, devolver 404 Not Found
+        if (productService.findById(id).isPresent()) {
+            productService.deleteById(id);
+            return ResponseEntity.noContent().build();
         }
+        return ResponseEntity.notFound().build();
     }
 }
