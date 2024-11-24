@@ -8,4 +8,6 @@ export class ProductService extends EntityDataService<any> {
     constructor(protected override httpClient: HttpClient) {
         super(httpClient, END_POINTS.setup.product); // Asegúrate de que END_POINTS.setup.inventario esté correctamente configurado
     }
+
+
 }

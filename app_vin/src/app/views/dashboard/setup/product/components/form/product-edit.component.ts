@@ -80,6 +80,23 @@ import { Product } from '../../models/product';
                     </mat-error>
                 </mat-form-field>
 
+                <mat-form-field>
+                    <mat-label>Precio</mat-label>
+                    <input
+                        matInput
+                        formControlName="precio"
+                        type="number"
+                        placeholder="Ingrese el precio del producto"
+                        min="0"
+                    />
+                    <mat-error *ngIf="productForm.get('precio')?.hasError('required')">
+                        El precio es obligatorio
+                    </mat-error>
+                    <mat-error *ngIf="productForm.get('precio')?.hasError('min')">
+                        El precio debe ser un valor positivo
+                    </mat-error>
+                </mat-form-field>
+
                 <div class="flex flex-col">
                     <label for="imagen" class="mb-2">Imagen (Máx. 2MB)</label>
                     <input
@@ -142,26 +159,18 @@ export class ProductEditComponent implements OnInit {
         private fb: FormBuilder,
         private _matDialog: MatDialogRef<ProductEditComponent>,
         private sanitizer: DomSanitizer
-    ) {
-        this.initForm();
-    }
-
-    private initForm(): void {
-        this.productForm = this.fb.group({
-            nombre: ['', [Validators.required, Validators.minLength(3)]],
-            modelo: [''],
-            codigo: [null, [Validators.required, Validators.min(0)]],
-            imagen: [null]
-        });
-    }
+    ) {}
 
     ngOnInit(): void {
+        this.initForm();
+
         if (this.product) {
             this.productForm.patchValue({
                 nombre: this.product.nombre,
                 modelo: this.product.modelo,
                 codigo: this.product.codigo,
-                imagen: this.product.imagen
+                precio: this.product.precio,  // Aquí se incluye el campo de precio
+                imagen: this.product.imagen,
             });
 
             if (this.product.imagen) {
@@ -170,18 +179,20 @@ export class ProductEditComponent implements OnInit {
         }
     }
 
+    private initForm(): void {
+        this.productForm = this.fb.group({
+            nombre: ['', [Validators.required, Validators.minLength(3)]],
+            modelo: [''],
+            codigo: [null, [Validators.required, Validators.min(0)]],
+            precio: [null, [Validators.required, Validators.min(0)]],  // Aquí se agrega el precio
+            imagen: [null], // Acepta Uint8Array o null
+        });
+    }
+
     private convertToBase64(array: Uint8Array): SafeUrl {
-        try {
-            const binary = Array.from(array)
-                .map((byte) => String.fromCharCode(byte))
-                .join('');
-            const base64String = `data:image/jpeg;base64,${btoa(binary)}`;
-            return this.sanitizer.bypassSecurityTrustUrl(base64String);
-        } catch (error) {
-            console.error('Error al convertir imagen:', error);
-            this.imageError = 'Error al procesar la imagen';
-            return '';
-        }
+        const binary = String.fromCharCode(...array);
+        const base64String = `data:image/png;base64,${btoa(binary)}`;
+        return this.sanitizer.bypassSecurityTrustUrl(base64String);
     }
 
     private validateFile(file: File): boolean {
@@ -192,30 +203,31 @@ export class ProductEditComponent implements OnInit {
             return false;
         }
 
+        const validTypes = ['image/jpeg', 'image/png'];
+        if (!validTypes.includes(file.type)) {
+            this.imageError = 'Solo se permiten imágenes JPEG o PNG';
+            return false;
+        }
+
         return true;
     }
 
     public onImageSelected(event: Event): void {
         const file = (event.target as HTMLInputElement).files?.[0];
-        if (file) {
-            if (this.validateFile(file)) {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    try {
-                        this.imagePreview = this.sanitizer.bypassSecurityTrustUrl(reader.result as string);
-                        this.productForm.patchValue({
-                            imagen: new Uint8Array(reader.result as ArrayBuffer)
-                        });
-                    } catch (error) {
-                        console.error('Error al cargar imagen:', error);
-                        this.imageError = 'Error al cargar la imagen';
-                    }
-                };
-                reader.onerror = () => {
-                    this.imageError = 'Error al leer el archivo';
-                };
-                reader.readAsArrayBuffer(file);
-            }
+        if (file && this.validateFile(file)) {
+            const reader = new FileReader();
+            reader.onload = () => {
+                const arrayBuffer = reader.result as ArrayBuffer;
+                this.imagePreview = this.sanitizer.bypassSecurityTrustUrl(
+                    `data:${file.type};base64,${btoa(
+                        String.fromCharCode(...new Uint8Array(arrayBuffer))
+                    )}`
+                );
+                this.productForm.patchValue({
+                    imagen: new Uint8Array(arrayBuffer),
+                });
+            };
+            reader.readAsArrayBuffer(file);
         }
     }
 
@@ -223,20 +235,14 @@ export class ProductEditComponent implements OnInit {
         this.imagePreview = null;
         this.imageError = null;
         this.productForm.patchValue({ imagen: null });
-        const fileInput = document.getElementById('imagen') as HTMLInputElement;
-        if (fileInput) {
-            fileInput.value = '';
-        }
     }
 
     public saveForm(): void {
         if (this.productForm.valid) {
-            const formValue = this.productForm.value;
             const productData: Product = {
                 id: this.product?.id, // Mantener el ID si existe
-                ...formValue
+                ...this.productForm.value,
             };
-
             this._matDialog.close(productData);
         }
     }

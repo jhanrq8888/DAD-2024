@@ -29,10 +29,11 @@ import { MatDialog } from '@angular/material/dialog';
                         <thead class="bg-primary-600 text-white">
                         <tr>
                             <th class="w-1/6 table-head text-center px-5 border-r">#</th>
-                            <th class="w-1/6 table-header text-center px-5 border-r">Imagen</th>  <!-- Nueva columna -->
+                            <th class="w-1/6 table-header text-center px-5 border-r">Imagen</th>
                             <th class="w-2/6 table-header text-center px-5 border-r">Nombre</th>
                             <th class="w-2/6 table-header text-center px-5 border-r">Modelo</th>
                             <th class="w-2/6 table-header text-center px-5 border-r">Código</th>
+                            <th class="w-1/6 table-header text-center px-5 border-r">Precio</th> <!-- Nueva columna para el precio -->
                             <th class="w-1/6 table-header text-center border-r">Estado</th>
                             <th class="w-2/6 table-header text-center">Acciones</th>
                         </tr>
@@ -44,12 +45,13 @@ import { MatDialog } from '@angular/material/dialog';
                                 <img [src]="'data:image/jpeg;base64,' + product.imagen"
                                      alt="Imagen producto"
                                      class="w-12 h-12 object-cover mx-auto rounded"
-                                     *ngIf="product.imagen"/>
-                                <mat-icon *ngIf="!product.imagen" class="text-gray-400">image_not_available</mat-icon>
+                                     *ngIf="product.imagen && product.imagen !== ''" />
+                                <mat-icon *ngIf="!product.imagen || product.imagen === ''" class="text-gray-400">image_not_available</mat-icon>
                             </td>
                             <td class="w-2/6 p-2 text-start border-b text-sm">{{ product.nombre }}</td>
                             <td class="w-2/6 p-2 text-start border-b text-sm">{{ product.modelo }}</td>
                             <td class="w-2/6 p-2 text-start border-b text-sm">{{ product.codigo }}</td>
+                            <td class="w-1/6 p-2 text-center border-b text-sm">{{ product.precio | currency }}</td> <!-- Mostrar el precio -->
                             <td class="w-1/6 p-2 text-center border-b text-sm">
                                 <div class="relative grid items-center font-sans font-bold uppercase whitespace-nowrap select-none bg-green-500/20 text-green-600 py-1 px-2 text-xs rounded-md">
                                     <span>ACTIVO</span>

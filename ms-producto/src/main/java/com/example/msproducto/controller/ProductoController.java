@@ -72,7 +72,8 @@ public class ProductoController {
             @RequestPart("producto") Producto producto,
             @RequestPart(value = "imagen", required = false) MultipartFile imagen) {
         try {
-            if (!productService.findById(id).isPresent()) {
+            Optional<Producto> existingProduct = productService.findById(id);
+            if (!existingProduct.isPresent()) {
                 return ResponseEntity.notFound().build();
             }
 
@@ -109,7 +110,8 @@ public class ProductoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteById(@PathVariable Integer id) {
         try {
-            if (!productService.findById(id).isPresent()) {
+            Optional<Producto> existingProduct = productService.findById(id);
+            if (!existingProduct.isPresent()) {
                 return ResponseEntity.notFound().build();
             }
             productService.deleteById(id);
