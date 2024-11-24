@@ -13,13 +13,13 @@ public interface ProductService {
     List<Producto> list();
 
     // Guardar un producto con o sin imagen
-    Producto save(Producto product) throws IOException;
+    Producto save(Producto product, MultipartFile imagen) throws IOException;
 
     // Buscar un producto por ID
     Optional<Producto> findById(Integer id);
 
-    // Actualizar un producto existente
-    Producto update(Producto product) throws IOException;
+    // Actualizar un producto existente (con o sin imagen)
+    Producto update(Producto product, MultipartFile imagen) throws IOException;
 
     // Eliminar un producto por ID
     void deleteById(Integer id);

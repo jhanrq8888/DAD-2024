@@ -31,10 +31,7 @@ public class ProductoController {
             @RequestPart("producto") Producto producto,
             @RequestPart(value = "imagen", required = false) MultipartFile imagen) {
         try {
-            if (imagen != null && !imagen.isEmpty()) {
-                producto.setImagen(imagen.getBytes());
-            }
-            Producto savedProduct = productService.save(producto);
+            Producto savedProduct = productService.save(producto, imagen);  // Llamar a save con el archivo de imagen
             return ResponseEntity.ok(savedProduct);
         } catch (IOException e) {
             return ResponseEntity.internalServerError().body(null);
@@ -53,11 +50,7 @@ public class ProductoController {
         }
 
         try {
-            if (imagen != null && !imagen.isEmpty()) {
-                producto.setImagen(imagen.getBytes());
-            }
-            producto.setId(id); // Asegurar que el ID sea el correcto
-            Producto updatedProduct = productService.update(producto);
+            Producto updatedProduct = productService.update(producto, imagen);  // Llamar a update con el archivo de imagen
             return ResponseEntity.ok(updatedProduct);
         } catch (IOException e) {
             return ResponseEntity.internalServerError().body(null);
