@@ -1,15 +1,15 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { ProductService } from "../../../../../providers/services/setup/product.service";
-import { ConfirmDialogService } from "../../../../../shared/confirm-dialog/confirm-dialog.service";
-import { ProductListComponent } from "../components";
-import { ProductNewComponent } from '../components/form/product-new.component';
-import { ProductEditComponent } from '../components/form/product-edit.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Product } from '../models/product';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import { catchError, of, take } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ProductNewComponent } from '../components/form/product-new.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ProductEditComponent } from '../components/form/product-edit.component';
+import { ConfirmDialogService } from "../../../../../shared/confirm-dialog/confirm-dialog.service";
+import { ProductListComponent } from "../components";
+import {ProductService} from "../../../../../providers/services/setup/product.service";
+
 
 @Component({
     selector: 'app-products-container',
@@ -31,17 +31,12 @@ import { catchError, of, take } from 'rxjs';
             (eventEdit)="eventEdit($event)"
             (eventDelete)="eventDelete($event)"
         ></app-products-list>
-
-        <!-- Display error message -->
-        <div *ngIf="error" class="error-message">
-            <p>{{ error }}</p>
-        </div>
     `,
 })
 export class ProductContainerComponent implements OnInit {
-    public error: string = ''; // To store any error message
+    public error: string = '';
     public products: Product[] = [];
-    public product: Product = new Product();
+    public product = new Product();
 
     constructor(
         private _productService: ProductService,
@@ -49,30 +44,26 @@ export class ProductContainerComponent implements OnInit {
         private _matDialog: MatDialog,
     ) {}
 
-    ngOnInit(): void {
+    ngOnInit() {
         this.getProducts();
     }
 
-    // Obtener todos los productos
     getProducts(): void {
-        this._productService.getAll$().pipe(
-            take(1),
-            catchError((error) => {
-                this.error = 'Failed to load products. Please try again later.';
-                console.error(error); // Log the error for debugging purposes
-                return of([]); // Return an empty array to prevent breaking the UI
-            })
-        ).subscribe((response) => {
-            this.products = response;
-        });
+        this._productService.getAll$().subscribe(
+            (response) => {
+                this.products = response;
+            },
+            (error) => {
+                this.error = error;
+            }
+        );
     }
 
-    // Abrir modal para crear un nuevo producto
     public eventNew($event: boolean): void {
         if ($event) {
             const productForm = this._matDialog.open(ProductNewComponent);
-            productForm.componentInstance.title = 'Nuevo Producto';
-            productForm.afterClosed().subscribe((result: Product) => {
+            productForm.componentInstance.title = 'Nuevo Producto' || null;
+            productForm.afterClosed().subscribe((result: any) => {
                 if (result) {
                     this.saveProduct(result);
                 }
@@ -80,46 +71,31 @@ export class ProductContainerComponent implements OnInit {
         }
     }
 
-    // Guardar un nuevo producto
-    saveProduct(data: Product): void {
-        this._productService.add$(data).pipe(
-            take(1),
-            catchError((error) => {
-                this.error = 'Failed to save product. Please try again later.';
-                console.error(error);
-                return of(null); // Prevent breaking the UI
-            })
-        ).subscribe((response) => {
+    saveProduct(data: Object): void {
+        this._productService.add$(data).subscribe((response) => {
             if (response) {
                 this.getProducts();
             }
         });
     }
 
-    // Abrir modal para editar un producto
     eventEdit(idProduct: number): void {
-        this._productService.getById$(idProduct).pipe(
-            take(1),
-            catchError((error) => {
-                this.error = 'Failed to load product for editing.';
-                console.error(error);
-                return of(null);
-            })
-        ).subscribe((response) => {
-            if (response) {
-                this.product = response;
+        const listById = this._productService
+            .getById$(idProduct)
+            .subscribe(async (response) => {
+                this.product = (response) || {};
                 this.openModalEdit(this.product);
-            }
-        });
+                listById.unsubscribe();
+            });
     }
 
-    // Abrir el modal de edición
-    openModalEdit(data: Product): void {
+    openModalEdit(data: Product) {
+        console.log(data);
         if (data) {
             const productForm = this._matDialog.open(ProductEditComponent);
             productForm.componentInstance.title = `Editar <b>${data.nombre || data.id}</b>`;
-            productForm.componentInstance.product = { ...data };
-            productForm.afterClosed().subscribe((result: Product) => {
+            productForm.componentInstance.product = data;
+            productForm.afterClosed().subscribe((result: any) => {
                 if (result) {
                     this.editProduct(data.id, result);
                 }
@@ -127,41 +103,20 @@ export class ProductContainerComponent implements OnInit {
         }
     }
 
-    // Editar producto
-    editProduct(idProduct: number, data: Product): void {
-        this._productService.update$(idProduct, data).pipe(
-            take(1),
-            catchError((error) => {
-                this.error = 'Failed to edit product. Please try again later.';
-                console.error(error);
-                return of(null); // Prevent breaking the UI
-            })
-        ).subscribe((response) => {
+    editProduct(idProduct: number, data: Object) {
+        this._productService.update$(idProduct, data).subscribe((response) => {
             if (response) {
                 this.getProducts();
             }
         });
     }
 
-    // Eliminar producto
-    public eventDelete(idProduct: number): void {
-        this._confirmDialogService.confirmDelete({
-            message: '¿Seguro que deseas eliminar este producto?',
-        }).then(() => {
-            this._productService.delete$(idProduct).pipe(
-                take(1),
-                catchError((error) => {
-                    this.error = 'Failed to delete product. Please try again later.';
-                    console.error(error);
-                    return of(null); // Prevent breaking the UI
-                })
-            ).subscribe((response) => {
-                if (response) {
-                    this.getProducts();
-                }
+    public eventDelete(idProduct: number) {
+        this._confirmDialogService.confirmDelete().then(() => {
+            this._productService.delete$(idProduct).subscribe((response) => {
+                this.products = response;
             });
-        }).catch(() => {
-            // Manejo de cancelación de la eliminación
-        });
+            this.getProducts();
+        }).catch(() => {});
     }
 }

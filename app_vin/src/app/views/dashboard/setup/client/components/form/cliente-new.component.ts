@@ -2,24 +2,22 @@ import { Component, Input, OnInit } from '@angular/core';
 import {
     FormControl,
     FormGroup,
-    FormsModule,
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
-
 import { abcForms } from '../../../../../../../environments/generals';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { Client } from '../../models/cliente'; // Asegúrate de importar el modelo Client
 
 @Component({
     selector: 'app-clients-new',
     standalone: true,
     imports: [
-        FormsModule,
         MatIconModule,
         MatButtonModule,
         ReactiveFormsModule,
@@ -35,21 +33,20 @@ import { MatInputModule } from '@angular/material/input';
                 <button mat-icon-button (click)="cancelForm()" [tabIndex]="-1">
                     <mat-icon
                         class="text-current"
-                        [svgIcon]="'heroicons_outline:x-mark'"
-                    ></mat-icon>
+                        [svgIcon]="'heroicons_outline:x-mark'">
+                    </mat-icon>
                 </button>
             </div>
-
 
             <!-- Compose form -->
             <form class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto" [formGroup]="clientForm">
                 <mat-form-field>
                     <mat-label>Nombre</mat-label>
-                    <input matInput formControlName="name" />
+                    <input matInput formControlName="nombre" />
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Apellidos</mat-label>
-                    <input matInput formControlName="lastname" />
+                    <input matInput formControlName="apellido" />
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Correo</mat-label>
@@ -57,15 +54,13 @@ import { MatInputModule } from '@angular/material/input';
                 </mat-form-field>
                 <mat-form-field>
                     <mat-label>Telefono</mat-label>
-                    <input matInput formControlName="phone" />
+                    <input matInput formControlName="telefono" />
                 </mat-form-field>
                 <!-- Actions -->
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-4 sm:mt-6">
                     <div class="flex space-x-2 items-center mt-4 sm:mt-0 ml-auto">
                         <button mat-stroked-button [color]="'warn'" (click)="cancelForm()">Cancelar</button>
-                        <button mat-stroked-button [color]="'primary'" (click)="saveForm()">
-                            Guardar
-                        </button>
+                        <button mat-stroked-button [color]="'primary'" (click)="saveForm()">Guardar</button>
                     </div>
                 </div>
             </form>
@@ -76,10 +71,10 @@ export class ClientNewComponent implements OnInit {
     @Input() title: string = '';
     abcForms: any;
     clientForm = new FormGroup({
-        name: new FormControl('', [Validators.required]),
-        lastname: new FormControl('', [Validators.required]),
-        email: new FormControl('', [Validators.required]),
-        phone: new FormControl('', [Validators.required]),
+        nombre: new FormControl('', [Validators.required]),
+        apellido: new FormControl('', [Validators.required]),
+        email: new FormControl('', [Validators.required, Validators.email]),
+        telefono: new FormControl('', [Validators.required]),
     });
 
     constructor(private _matDialog: MatDialogRef<ClientNewComponent>) {}
@@ -90,11 +85,11 @@ export class ClientNewComponent implements OnInit {
 
     public saveForm(): void {
         if (this.clientForm.valid) {
-            this._matDialog.close(this.clientForm.value);
+            this._matDialog.close(this.clientForm.value); // Envía el valor del formulario
         }
     }
 
     public cancelForm(): void {
-        this._matDialog.close('');
+        this._matDialog.close(''); // Cancela la acción y cierra el diálogo
     }
 }

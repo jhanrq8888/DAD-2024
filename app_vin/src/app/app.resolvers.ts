@@ -63,7 +63,7 @@ export const initialDataResolver = () =>
             id         : '95930319-61cc-4c7e-9324-f1091865330c',
             image      : 'assets/images/avatars/female-04.jpg',
             title      : 'Elizabeth (New assistant)',
-            description: 'Boss, I\'ve sent all client invoices but Geoffrey refusing to pay.',
+            description: 'Boss, I\'ve sent all cliente invoices but Geoffrey refusing to pay.',
             time       : now.minus({hours: 9}).toISO(), // 9 hours ago
             read       : false,
             link       : '/dashboards/project',

@@ -164,12 +164,12 @@ export class ProductEditComponent implements OnInit {
     ngOnInit(): void {
         this.initForm();
 
-        if (this.product) {
+        if (this.product?.id) {
             this.productForm.patchValue({
                 nombre: this.product.nombre,
                 modelo: this.product.modelo,
                 codigo: this.product.codigo,
-                precio: this.product.precio,  // Aquí se incluye el campo de precio
+                precio: this.product.precio,
                 imagen: this.product.imagen,
             });
 
@@ -184,8 +184,8 @@ export class ProductEditComponent implements OnInit {
             nombre: ['', [Validators.required, Validators.minLength(3)]],
             modelo: [''],
             codigo: [null, [Validators.required, Validators.min(0)]],
-            precio: [null, [Validators.required, Validators.min(0)]],  // Aquí se agrega el precio
-            imagen: [null], // Acepta Uint8Array o null
+            precio: [null, [Validators.required, Validators.min(0)]],
+            imagen: [null],
         });
     }
 
@@ -234,20 +234,20 @@ export class ProductEditComponent implements OnInit {
     public removeImage(): void {
         this.imagePreview = null;
         this.imageError = null;
-        this.productForm.patchValue({ imagen: null });
+        this.productForm.patchValue({
+            imagen: null,
+        });
+    }
+
+    public cancelForm(): void {
+        this._matDialog.close();
     }
 
     public saveForm(): void {
         if (this.productForm.valid) {
-            const productData: Product = {
-                id: this.product?.id, // Mantener el ID si existe
-                ...this.productForm.value,
-            };
-            this._matDialog.close(productData);
+            // Llamar al servicio para guardar el producto
+            console.log('Formulario Guardado:', this.productForm.value);
+            this._matDialog.close(this.productForm.value);
         }
-    }
-
-    public cancelForm(): void {
-        this._matDialog.close(null);
     }
 }

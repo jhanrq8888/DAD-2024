@@ -4,9 +4,9 @@ import { END_POINTS, EntityDataService, IResponse } from '../../utils';
 import {Observable} from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class ClientService extends EntityDataService<any> {
+export class ClienteService extends EntityDataService<any> {
     constructor(protected override httpClient: HttpClient) {
-        super(httpClient, END_POINTS.setup.client);
+        super(httpClient, END_POINTS.setup.cliente);
     }
 
 

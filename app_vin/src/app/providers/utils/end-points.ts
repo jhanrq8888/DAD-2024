@@ -16,7 +16,7 @@ export const END_POINTS = {
       envio: 'envio',
       product: 'product',
       category: 'category',
-      client: 'client',
+      cliente: 'cliente',
     accesRole: 'acceso-rol',
 
     person: 'persona',

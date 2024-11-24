@@ -11,7 +11,7 @@ export default [
             {path: 'envio', loadChildren: () => import('./envio/envio.routers')},
             {path: 'product', loadChildren: () => import('./product/product.routers')},
             {path: 'category', loadChildren: () => import('./category/category.routers')},
-            {path: 'client', loadChildren: () => import('./client/client.routers')},
+            {path: 'cliente', loadChildren: () => import('./client/cliente.routers')},
             {path: 'role', loadChildren: () => import('./roles/roles.routers')},
             {path: 'users', loadChildren: () => import('./user/users-routers')},
             {path: 'user', loadChildren: () => import('./user/users-routers')},

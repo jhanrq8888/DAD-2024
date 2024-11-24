@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { abcForms } from '../../../../../environments/generals';
 import { Component, OnInit } from '@angular/core';
+
 @Component({
     selector: 'app-setup',
     standalone: true,
@@ -18,12 +19,14 @@ import { Component, OnInit } from '@angular/core';
     `,
     // styleUrl: './setup.component.scss'
 })
-export class ClientComponent implements OnInit {
+export class ClienteComponent implements OnInit {  // Cambié el nombre de ProductComponent a ClienteComponent
     public title: string = '';
     abcForms: any;
+
     constructor() {}
+
     ngOnInit() {
-        this.title = 'Cliente';
-        this.abcForms = abcForms;
+        this.title = 'Cliente'; // Cambio del título de Producto a Cliente
+        this.abcForms = abcForms; // Reutilización de la configuración
     }
 }
