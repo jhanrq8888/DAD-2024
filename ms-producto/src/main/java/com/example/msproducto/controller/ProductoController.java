@@ -26,20 +26,21 @@ public class ProductoController {
     }
 
     // Crear un nuevo producto con imagen
-    @PostMapping
+    @PostMapping(consumes = "multipart/form-data")
     public ResponseEntity<Producto> save(
             @RequestPart("producto") Producto producto,
             @RequestPart(value = "imagen", required = false) MultipartFile imagen) {
         try {
-            Producto savedProduct = productService.save(producto, imagen);  // Llamar a save con el archivo de imagen
+            Producto savedProduct = productService.save(producto, imagen);
             return ResponseEntity.ok(savedProduct);
         } catch (IOException e) {
             return ResponseEntity.internalServerError().body(null);
         }
     }
 
+
     // Actualizar un producto existente
-    @PutMapping("/{id}")
+    @PutMapping(value = "/{id}", consumes = "multipart/form-data")
     public ResponseEntity<Producto> update(
             @PathVariable Integer id,
             @RequestPart("producto") Producto producto,
