@@ -28,7 +28,7 @@ public class ProductoController {
     // Crear un nuevo producto con imagen
     @PostMapping
     public ResponseEntity<Producto> save(
-            @RequestPart(value = "producto") Producto producto,  // Datos del producto
+            @RequestPart("producto") Producto producto,  // Datos del producto
             @RequestPart(value = "imagen", required = false) MultipartFile imagen) {  // Imagen del producto
 
         Producto savedProduct;
