@@ -46,7 +46,6 @@ public class ProductoController {
         }
     }
 
-
     // Actualizar un producto existente
     @PutMapping("/{id}")
     public ResponseEntity<Producto> update(
@@ -75,7 +74,6 @@ public class ProductoController {
             return ResponseEntity.internalServerError().build();  // Manejar error de lectura de la imagen
         }
     }
-
 
     // Obtener un producto por ID
     @GetMapping("/{id}")
