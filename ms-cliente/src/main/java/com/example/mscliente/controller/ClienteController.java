@@ -31,10 +31,16 @@ public class ClienteController {
     }
 
     // Actualizar los datos de un cliente
-    @PutMapping
-    public ResponseEntity<Cliente> update(@RequestBody Cliente cliente) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> update(@PathVariable Integer id, @RequestBody Cliente cliente) {
+        Optional<Cliente> existingCliente = clienteService.findById(id);
+        if (existingCliente.isEmpty()) {
+            return ResponseEntity.notFound().build(); // Retorna 404 si no existe
+        }
+
+        cliente.setId(id); // Asigna el id correcto al objeto cliente
         Cliente updatedCliente = clienteService.update(cliente);
-        return ResponseEntity.ok(updatedCliente);
+        return ResponseEntity.ok(updatedCliente); // Retorna el cliente actualizado
     }
 
     // Obtener un cliente por su ID

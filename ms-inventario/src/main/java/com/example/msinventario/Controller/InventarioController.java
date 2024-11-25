@@ -34,26 +34,33 @@ public class InventarioController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<Inventario>> getById(@PathVariable Integer id) {
-        return ResponseEntity.ok(inventarioService.findById(id));
+    public ResponseEntity<Inventario> getById(@PathVariable Integer id) {
+        Optional<Inventario> inventario = inventarioService.findById(id);
+        return inventario.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Inventario inventario) {
-        ProveedorDto proveedorDto = proveedorFeign.getById(inventario.getProveedorId()).getBody();
+        try {
+            ProveedorDto proveedorDto = proveedorFeign.getById(inventario.getProveedorId()).getBody();
 
-        if (proveedorDto == null || proveedorDto.getId() == null) {
-            String errorMessage = "Error: Proveedor no encontrado.";
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(errorMessage));
-        }
-
-        for (InventarioDetalle inventarioDetalle : inventario.getInventarioDetalle()) {
-            ProductoDto productoDto = productoFeign.getById(inventarioDetalle.getProductoId()).getBody();
-
-            if (productoDto == null || productoDto.getId() == null) {
-                String errorMessage = "Error: Producto no encontrado.";
+            if (proveedorDto == null || proveedorDto.getId() == null) {
+                String errorMessage = "Error: Proveedor no encontrado.";
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(errorMessage));
             }
+
+            for (InventarioDetalle inventarioDetalle : inventario.getInventarioDetalle()) {
+                ProductoDto productoDto = productoFeign.getById(inventarioDetalle.getProductoId()).getBody();
+
+                if (productoDto == null || productoDto.getId() == null) {
+                    String errorMessage = "Error: Producto no encontrado.";
+                    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponseDto(errorMessage));
+                }
+            }
+        } catch (Exception e) {
+            String errorMessage = "Error al comunicarse con el servicio de Proveedor o Producto.";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponseDto(errorMessage));
         }
 
         Inventario nuevoInventario = inventarioService.save(inventario);
@@ -61,14 +68,23 @@ public class InventarioController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Inventario> update(@PathVariable Integer id, @RequestBody Inventario inventario) {
+    public ResponseEntity<?> update(@PathVariable Integer id, @RequestBody Inventario inventario) {
+        Optional<Inventario> existingInventario = inventarioService.findById(id);
+        if (existingInventario.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         inventario.setId(id);
-        return ResponseEntity.ok(inventarioService.save(inventario));
+        Inventario updatedInventario = inventarioService.save(inventario);
+        return ResponseEntity.ok(updatedInventario);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<List<Inventario>> delete(@PathVariable Integer id) {
+    public ResponseEntity<String> delete(@PathVariable Integer id) {
+        Optional<Inventario> existingInventario = inventarioService.findById(id);
+        if (existingInventario.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         inventarioService.delete(id);
-        return ResponseEntity.ok(inventarioService.list());
+        return ResponseEntity.ok("Inventario eliminado correctamente.");
     }
 }

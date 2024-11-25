@@ -63,7 +63,7 @@ import { MatDialog } from '@angular/material/dialog';
                                 {{ r.telefono }}
                             </td>
                             <td class="w-1/6 p-2 text-start border-b text-sm">
-                                {{ r.direccion }}
+                                {{ r.direction }}
                             </td>
                             <td class="w-2/6 p-2 text-center border-b text-sm">
                                 <div class="flex justify-center space-x-3">

@@ -71,7 +71,7 @@ export class ProveedorEditComponent implements OnInit {
         nombre: new FormControl('', [Validators.required]),
         empresa: new FormControl('', [Validators.required]),
         telefono: new FormControl('', [Validators.required, Validators.pattern(/^\d{9,10}$/)]), // Patrón para números
-        direccion: new FormControl('', [Validators.required]),
+        direction: new FormControl('', [Validators.required]),
     });
 
     @Input() title: string = '';

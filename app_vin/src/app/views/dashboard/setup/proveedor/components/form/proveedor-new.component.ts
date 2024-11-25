@@ -79,7 +79,7 @@ export class ProveedorNewComponent implements OnInit {
         nombre: new FormControl('', [Validators.required]),
         empresa: new FormControl('', [Validators.required]),
         telefono: new FormControl('', [Validators.required, Validators.pattern(/^\d{9,10}$/)]), // Validación para números
-        direccion: new FormControl('', [Validators.required]),
+        direction: new FormControl('', [Validators.required]),
     });
 
     constructor(private _matDialog: MatDialogRef<ProveedorNewComponent>) {}
