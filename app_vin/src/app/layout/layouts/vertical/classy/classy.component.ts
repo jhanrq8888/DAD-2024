@@ -138,13 +138,14 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
                 icon: 'heroicons_outline:chart-pie',
                 link: '/example',
                 children: [
-                    {
+                    /*{
                         id: 'SetupRole',
                         title: 'Setup Role',
                         type: 'basic',
                         icon: 'heroicons_outline:chart-pie',
                         link: '/homeScreen/setup/role',
-                    },
+                    },*/
+
                     {
                         id: 'SetupClient',
                         title: 'Setup Cliente',
@@ -159,6 +160,35 @@ export class ClassyLayoutComponent implements OnInit, OnDestroy {
                         icon: 'heroicons_outline:chart-pie',
                         link: '/homeScreen/setup/category',
                     },
+                    {
+                        id: 'SetupProducto',
+                        title: 'Setup Producto',
+                        type: 'basic',
+                        icon: 'heroicons_outline:chart-pie',
+                        link: '/homeScreen/setup/product',
+                    },
+                    {
+                        id: 'SetupInventario',
+                        title: 'Setup inventario',
+                        type: 'basic',
+                        icon: 'heroicons_outline:chart-pie',
+                        link: '/homeScreen/setup/inventario',
+                    },
+                    {
+                        id: 'SetupPrveedor',
+                        title: 'Setup Proveedor',
+                        type: 'basic',
+                        icon: 'heroicons_outline:chart-pie',
+                        link: '/homeScreen/setup/proveedor',
+                    },
+                    {
+                        id: 'SetupPedido',
+                        title: 'Setup Pedido',
+                        type: 'basic',
+                        icon: 'heroicons_outline:chart-pie',
+                        link: '/homeScreen/setup/pedido',
+                    },
+
                 ],
             },
 

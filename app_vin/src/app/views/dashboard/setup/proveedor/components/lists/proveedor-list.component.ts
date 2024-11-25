@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-
 import { abcForms } from '../../../../../../../environments/generals';
-import { Client } from '../../models/cliente';  // Asegúrate de que Client esté importado desde la ubicación correcta
+import { Proveedor } from '../../models/proveedor';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
 
 @Component({
-    selector: 'app-clients-list',
+    selector: 'app-proveedores-list',
     imports: [CommonModule, RouterOutlet, MatButtonModule, MatIconModule],
     standalone: true,
     template: `
@@ -17,11 +16,11 @@ import { MatDialog } from '@angular/material/dialog';
             <!-- Encabezado principal -->
             <div class="flex justify-between items-center mb-2 bg-slate-300 text-black p-4 rounded">
                 <h2 class="text-2xl font-bold">
-                    Lista de <span class="text-primary">Clientes</span>
+                    Lista de <span class="text-primary">Proveedores</span>
                 </h2>
                 <button mat-flat-button [color]="'primary'" (click)="goNew()">
                     <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
-                    <span class="ml-2">Nuevo Cliente</span>
+                    <span class="ml-2">Nuevo Proveedor</span>
                 </button>
             </div>
             <div class="bg-white rounded overflow-hidden shadow-lg">
@@ -34,13 +33,13 @@ import { MatDialog } from '@angular/material/dialog';
                                 Nombre
                             </th>
                             <th class="w-2/6 table-header text-center px-5 border-r">
-                                Apellido
-                            </th>
-                            <th class="w-2/6 table-header text-center px-5 border-r">
-                                Correo
+                                Empresa
                             </th>
                             <th class="w-2/6 table-header text-center px-5 border-r">
                                 Teléfono
+                            </th>
+                            <th class="w-1/6 table-header text-center border-r">
+                                Dirección
                             </th>
                             <th class="w-2/6 table-header text-center">
                                 Acciones
@@ -49,24 +48,23 @@ import { MatDialog } from '@angular/material/dialog';
                         </thead>
                         <tbody
                             class="bg-white"
-                            *ngFor="let r of clients; let i = index">
+                            *ngFor="let r of proveedores; let i = index">
                         <tr class="hover:bg-gray-100">
                             <td class="w-1/6 p-2 text-center border-b">
                                 {{ i + 1 }}
                             </td>
-                            <td class="w-2/6 p-2  text-start border-b text-sm">
+                            <td class="w-2/6 p-2 text-start border-b text-sm">
                                 {{ r.nombre }}
                             </td>
-                            <td class="w-2/6 p-2  text-start border-b text-sm">
-                                {{ r.apellido }}
+                            <td class="w-2/6 p-2 text-start border-b text-sm">
+                                {{ r.empresa }}
                             </td>
-                            <td class="w-2/6 p-2  text-start border-b text-sm">
-                                {{ r.email }}
-                            </td>
-                            <td class="w-2/6 p-2  text-start border-b text-sm">
+                            <td class="w-2/6 p-2 text-start border-b text-sm">
                                 {{ r.telefono }}
                             </td>
-
+                            <td class="w-1/6 p-2 text-start border-b text-sm">
+                                {{ r.direccion }}
+                            </td>
                             <td class="w-2/6 p-2 text-center border-b text-sm">
                                 <div class="flex justify-center space-x-3">
                                     <mat-icon class="text-amber-400 hover:text-amber-500 cursor-pointer"
@@ -84,13 +82,12 @@ import { MatDialog } from '@angular/material/dialog';
         </div>
     `,
 })
-export class ClientListComponent implements OnInit {
+export class ProveedoresListComponent implements OnInit {
     abcForms: any;
-    @Input() clients: Client[] = [];
+    @Input() proveedores: Proveedor[] = [];
     @Output() eventNew = new EventEmitter<boolean>();
     @Output() eventEdit = new EventEmitter<number>();
     @Output() eventDelete = new EventEmitter<number>();
-    @Output() eventAssign = new EventEmitter<number>();
 
     constructor(private _matDialog: MatDialog) {}
 
@@ -108,9 +105,5 @@ export class ClientListComponent implements OnInit {
 
     public goDelete(id: number): void {
         this.eventDelete.emit(id);
-    }
-
-    public goAssign(id: number): void {
-        this.eventAssign.emit(id);
     }
 }

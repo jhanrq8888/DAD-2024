@@ -61,8 +61,8 @@ spring:
           uri: lb://ms-proveedor-service  # Ruta para el servicio ms-proveedor-service
           predicates:
             - Path=/proveedor/**  # Rutas que comienzan con `/proveedor/` se enrutan a este servicio.
-          filters:
-            - AuthFilter  # Filtro de autorización.
+          #filters:
+           # - AuthFilter  # Filtro de autorización.
 
         - id: ms-pedido-service
           uri: lb://ms-pedido-service  # Ruta para el servicio ms-pedido-service

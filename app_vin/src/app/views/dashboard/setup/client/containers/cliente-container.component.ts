@@ -125,14 +125,17 @@ export class ClientContainerComponent implements OnInit {
         this._confirmDialogService.confirmDelete({
             message: '¿Estás seguro de que deseas eliminar este cliente? Esta acción no se puede deshacer.'
         }).then(() => {
-            this._clientService.delete$(idClient).subscribe(
-                () => {
-                    this.clients = this.clients.filter(client => client.id !== idClient); // Elimina el cliente de la lista
+            this._clientService.delete$(idClient).subscribe({
+                next: () => {
+                    // Primero eliminar el cliente localmente
+                    this.clients = this.clients.filter(client => client.id !== idClient);
+                    // O si prefieres mantener la sincronización con el backend:
+                    // this.getClients();
                 },
-                (error) => {
+                error: (error) => {
                     this.error = 'Error al eliminar el cliente: ' + error;
                 }
-            );
+            });
         }).catch(() => {
             // No hacer nada si el usuario cancela
         });

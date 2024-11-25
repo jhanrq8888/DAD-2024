@@ -10,6 +10,7 @@ export default [
             {path: 'pedido', loadChildren: () => import('./pedido/pedido.routers')},
             {path: 'envio', loadChildren: () => import('./envio/envio.routers')},
             {path: 'product', loadChildren: () => import('./product/product.routers')},
+            {path: 'proveedor', loadChildren: () => import('./proveedor/proveedor.routers')},
             {path: 'category', loadChildren: () => import('./category/category.routers')},
             {path: 'cliente', loadChildren: () => import('./client/cliente.routers')},
             {path: 'role', loadChildren: () => import('./roles/roles.routers')},
